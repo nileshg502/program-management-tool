@@ -48,16 +48,22 @@ Every time a new project is initiated.
 Every sprint (typically every 1–2 weeks).
 
 ### Steps
-1. **At sprint start:**
+1. **At sprint start — Lock Sprint Baseline:**
    - Confirm sprint goal with development team
-   - Note what stories/tasks are committed for this sprint
+   - List all stories committed to this sprint
+   - **Verify each story's ACs against the contract baseline** — ACs must not exceed contracted scope
+   - If any AC exceeds contracted scope → flag immediately, run forensic before dev starts
+   - Record carry-over stories from previous sprint — confirm their scope has not changed
+   - Sprint baseline is now locked: the ACs of all committed stories are the reference for this sprint
    - Record sprint start date and expected end date
-   - Set sprint baseline — what is in scope for this sprint only
 
 2. **During sprint — Daily Drift Check (90 seconds at standup):**
-   - Ask one question every day: **"Is anything we are working on today not in the baseline?"**
-   - If yes — tag the item immediately as **D (Absorbed)** or **CR-Pending**
-   - If unclear — default to **CR-Pending**, never silent absorption
+   - Ask one question every day: **"Is anything we are working on today outside the Acceptance Criteria of our committed stories — AND not covered anywhere else in our Epics, Stories, or future Sprints?"**
+   - Both conditions must be true to log it as drift
+   - If work is covered in another Epic/Story/Sprint → not drift, do not log
+   - If work belongs to a future sprint but being done now → flag as sprint pull-forward, PM decides to allow or stop
+   - If genuinely uncovered anywhere → tag immediately as **D (Absorbed)** or **CR-Pending**
+   - If unclear → default to **CR-Pending**, never silent absorption
    - Log tagged items in the project Drift Log same day
    - This is the single highest-leverage habit — catches leak at point of origin before work is done
 
@@ -68,10 +74,19 @@ Every sprint (typically every 1–2 weeks).
 
 4. **At sprint end:**
    - Record what was completed vs committed (velocity)
-   - Note any carry-over items and reason
+   - Note any carry-over items and reason — confirm scope has not changed on carry-overs
+   - Record effort variance per story — hours contracted vs hours actually spent
    - Update project status (RAG) based on sprint outcome
    - Confirm next sprint plan is ready
    - **Run Milestone Reconciliation** (see Section 2A below)
+
+### What Is NOT Drift — Do Not Log
+| Item | Reason |
+|------|--------|
+| Bug fixes against existing ACs | Delivery obligation — already contracted |
+| Technical debt within AC boundary | Implementation detail — not scope deviation. Track as effort variance only. |
+| Work traceable to another Epic/Story/Sprint | Planned work — not drift, regardless of which sprint |
+| Story priority change — moved earlier or later | Planning decision — not drift |
 
 ### Output
 - Sprint completion record (committed vs delivered)

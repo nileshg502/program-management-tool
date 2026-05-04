@@ -156,15 +156,32 @@ Shall I proceed? If yes, confirm the project root path.
 
 ---
 
+## Baseline Levels
+
+Drift occurs at different speeds across five levels. The Forensic Role operates at all five:
+
+| Level | When Set | Drift Speed | What Is Checked |
+|-------|----------|------------|-----------------|
+| Project baseline | At contract signing | Slowest — locked forever | Full SOW + modules + agreed hours |
+| Epic/Story baseline | When Epics/Stories are generated from PRD | Fast — before dev starts | Claude may elaborate beyond PRD scope |
+| Milestone baseline | At sprint start — the ACs of committed stories | Medium — per sprint | Work outside committed story ACs |
+| Code baseline | When code generation for Epic/Story completes | Fast — during generation | Code may exceed Story/AC scope |
+| Daily baseline | At each standup | Fastest — most leak originates here | Work items vs sprint AC commitment |
+
+**Key principle:** The sprint baseline is the Acceptance Criteria of all stories committed to that sprint — not a separate document. ACs must be checked against the contract baseline before being locked.
+
+---
+
 ## Smart Defaults by Trigger
 
 The role determines which layers to compare based on the trigger — no need to specify:
 
 | Trigger | Layers Compared Automatically |
 |---------|-------------------------------|
-| New Epic/Story created | Contract Baseline → PRD → Module List → Epic/Story |
-| Code development completed | Epic/Story → Code (what was actually built) |
+| New Epic/Story created | Contract Baseline → PRD → Module List → Epic/Story ACs |
+| Code development completed | Story ACs → Code (what was actually built) |
 | Client requirement/CR received | New requirement → Full baseline (all layers) |
+| Sprint start | Story ACs → Contract Baseline (verify ACs don't exceed contracted scope) |
 | Ad hoc | Asks one follow-up: which layer to check? |
 
 ---
@@ -179,16 +196,31 @@ The role determines which layers to compare based on the trigger — no need to 
 - Flag any missing key documents — never assume or guess content
 
 ### Step 2 — "Is This New or Already Being Catered To?" Check
-For every requirement, Epic, Story, or CR in scope:
+For every requirement, Epic, Story, CR, or piece of code in scope, the role runs two checks before logging anything:
+
+**Check A — Baseline traceability:**
 
 | Finding | Meaning | Action |
 |---------|---------|--------|
-| Already in contract baseline | Contracted work — no delta | Tag B — confirm and move on |
+| Traceable to contract baseline | Contracted work — no delta | Tag B — confirm and move on |
 | Found in drift log as CR-Pending | Already identified, decision deferred | Bring to milestone reconciliation |
 | Found in drift log as D-Absorbed | Previously absorbed — check if it has grown | Flag growth to PM |
-| Never seen before | Fresh delta | Proceed to full delta analysis |
+| Never seen before in any baseline | Fresh delta — proceed to full analysis | Continue to Check B |
 | Previously tagged Remove, now asked again | CR opportunity | Flag to PM immediately |
 | Previously removed code has crept back in | Scope creep | Flag to PM immediately |
+
+**Check B — Cross-project coverage (run before logging any deviation):**
+
+| Finding | Meaning | Action |
+|---------|---------|--------|
+| Work covered in another Epic or Story | Planned work — not drift | Do not log |
+| Work planned in a future sprint | Planned work — not drift | Do not log. If being done now — flag as sprint pull-forward (see below) |
+| Work partially covered | Some in scope, some not | Split — log only the uncovered portion |
+| Work covered nowhere in project plan | Genuine drift | Log in Drift Log with tag |
+
+**Sprint pull-forward rule:** If work belongs to a future sprint but is being done now — it is not drift but it is a sprint variance. Tag it as **Sprint Pull-Forward**, note which sprint/story it belongs to, flag to PM. PM decides whether to allow it or stop it.
+
+**Do not log as drift if the work exists anywhere in the contracted project plan — regardless of which sprint it was intended for.**
 
 ### Step 3 — Delta Analysis
 For each layer being compared, precisely identify:
@@ -410,10 +442,16 @@ Removed                        : [n] items — [x] hours — flagged for future 
 
 | Revenue Risk | How Caught |
 |-------------|------------|
-| PRD adds scope beyond client SOW | Baseline vs PRD check |
-| Stories add scope beyond module list | Modules vs Stories check |
-| Code adds scope beyond stories | Stories vs Code check |
-| Claude adds technical work not in stories | Stories vs Code check — Source tagged as "Claude-generated" |
+| PRD adds scope beyond client SOW | Epic/Story creation trigger — Baseline vs PRD check |
+| Story ACs exceed contracted module scope | Sprint start trigger — ACs vs Contract Baseline |
+| Stories add scope beyond module list | Epic/Story creation trigger — Modules vs Stories check |
+| Code adds scope beyond Story ACs | Code completion trigger — ACs vs Code check |
+| Claude adds technical work not in stories | Code completion trigger — Source tagged as "Claude-generated" |
+| Informal client request absorbed mid-sprint | Daily drift check — standup question |
+| Work done that belongs to a future sprint | Cross-check B — flagged as sprint pull-forward |
+| Technical debt within AC boundary | Not logged as drift — tracked as effort variance in Sprint Record |
+| Bug fixes against existing ACs | Not logged as drift — delivery obligation |
+| Story traceable to another Epic/Sprint | Cross-check B — not logged |
 | Hours overrun per role | Effort diagnosis on every delta item |
 | Client CR creeping into baseline without decision | CR trigger — full baseline comparison |
 | Small items absorbed silently because they feel trivial | Four-tag system — nothing is untagged |

@@ -70,15 +70,17 @@
 
 ---
 
-## Forensic Summary
+## Drift & Revenue Summary
 
-| | Count | Hours |
-|--|-------|-------|
-| Total delta found | | |
-| Accepted (absorbed) | | |
-| Charged to client | | |
-| Removed | | |
-| Last forensic run | [date] | |
+| | Count | Hours | Notes |
+|--|-------|-------|-------|
+| Goodwill Investment (Absorbed) | | | Deliberate gift — tracked, not lost |
+| Deferred CR Pipeline (Bundled) | | | Awaiting strategic client conversation |
+| Converted CR Revenue | | | Billed to client |
+| Removed from codebase | | | Flagged for future CR |
+| **Total drift this period** | | | |
+| Last forensic run | [date] | | |
+| Bundle-ready alert | Yes / No | | Present at: [mid-project / closure / renewal] |
 
 ---
 

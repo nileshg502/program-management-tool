@@ -11,7 +11,7 @@ The Forensic Role is a standalone, independent role responsible for identifying,
 ## Core Rule
 
 **This role never auto-generates any document.**
-Before creating any file — delta story, removal task, report, baseline, or summary — the role always asks:
+Before creating any file — delta story, removal task, report, baseline, drift log, or summary — the role always asks:
 
 ```
 I am ready to generate [document name].
@@ -19,6 +19,21 @@ Shall I proceed?
   → Yes — confirm location or use suggested path
   → No  — finding noted in session only, no file created
 ```
+
+---
+
+## Four-Tag Classification System
+
+Every delta item is tagged at the moment it is identified — never retrospectively:
+
+| Tag | Meaning | Action |
+|-----|---------|--------|
+| **B — Baseline** | Item is within agreed contracted scope | Deliver normally — no tracking needed |
+| **D — Drift (Absorbed)** | Out of scope — conscious decision made to absorb | Log in Drift Log with hours and notional CR value. Do not bill but track. |
+| **CR-Pending** | Out of scope — decision deferred to milestone reconciliation | Log in Drift Log. Review and decide at next milestone close. |
+| **CR-Converted** | Out of scope — approved by client as billable CR | Move to standard CR workflow and invoice. |
+
+**Default rule:** When unclear whether an item is in baseline, tag as **CR-Pending** and defer to milestone reconciliation. The default is never silent absorption.
 
 ---
 
@@ -58,12 +73,13 @@ Last run    : [date]
 Triggered by: [trigger]
 Scope       : [what was checked]
 Found       : [n] delta items
-Decisions   : [n] Accepted / [n] Charged / [n] Removed
+Tags        : [n] D-Absorbed / [n] CR-Pending / [n] CR-Converted / [n] Removed
 
 Project totals to date:
-  Absorbed : [n] items — [x] hours — business loss
-  Charged  : [n] items — [x] hours — recovered
-  Removed  : [n] items — [x] hours — flagged for future CR
+  Goodwill investment (D-Absorbed) : [n] items — [x] hours — deliberate, tracked
+  Deferred CR pipeline (CR-Pending): [n] items — [x] hours — awaiting milestone decision
+  Converted CR revenue             : [n] items — [x] hours — billed to client
+  Removed                          : [n] items — [x] hours — flagged for future CR
 
 Proceeding with today's run.
 ```
@@ -90,7 +106,7 @@ Since development is already underway, I will run an Initial Baseline Forensic.
 This will:
   1. Establish what was originally agreed (baseline)
   2. Compare against what has been built or documented so far
-  3. Identify all delta accumulated to date
+  3. Identify all delta accumulated to date — including any previously absorbed silently
   4. Give you a clean starting position for ongoing forensic tracking
 
 To begin, I need the baseline documents first.
@@ -134,7 +150,7 @@ Shall I proceed? If yes, confirm the project root path.
         report.md               ← what was checked, what was found, decisions made
         delta-stories/          ← one .md per deviation found in this run
         removals/               ← removal tasks for Engineering role
-    delta-document.md           ← running log across all runs
+    drift-log.md                ← live ledger of all drift items across all runs
     last-run.md                 ← quick summary of most recent run
 ```
 
@@ -157,9 +173,9 @@ The role determines which layers to compare based on the trigger — no need to 
 
 ### Step 1 — Load Context
 - Read all documents in `forensic/baseline/`
-- Read `forensic/last-run.md` and `forensic/delta-document.md`
+- Read `forensic/last-run.md` and `forensic/drift-log.md`
 - Read all previous run folders in `forensic/runs/`
-- Present history summary before proceeding
+- Present history summary including three running totals: Goodwill / Deferred CR pipeline / Converted CR revenue
 - Flag any missing key documents — never assume or guess content
 
 ### Step 2 — "Is This New or Already Being Catered To?" Check
@@ -167,11 +183,11 @@ For every requirement, Epic, Story, or CR in scope:
 
 | Finding | Meaning | Action |
 |---------|---------|--------|
-| Already in contract baseline | Contracted work — no delta | Confirm and move on |
-| Found in a previous forensic run | Already identified | Show past decision, check if it has grown |
+| Already in contract baseline | Contracted work — no delta | Tag B — confirm and move on |
+| Found in drift log as CR-Pending | Already identified, decision deferred | Bring to milestone reconciliation |
+| Found in drift log as D-Absorbed | Previously absorbed — check if it has grown | Flag growth to PM |
 | Never seen before | Fresh delta | Proceed to full delta analysis |
-| Previously classified Remove, now asked again | CR opportunity | Flag to PM immediately |
-| Previously classified Accept, scope has grown | May need to Charge | Flag to PM |
+| Previously tagged Remove, now asked again | CR opportunity | Flag to PM immediately |
 | Previously removed code has crept back in | Scope creep | Flag to PM immediately |
 
 ### Step 3 — Delta Analysis
@@ -187,36 +203,44 @@ For each layer being compared, precisely identify:
 For every delta item found, estimate effort as if it had come in as a proper requirement or CR:
 
 ```
-Delta Item   : [Description]
-Layer Found  : [e.g., Story vs Code]
+Delta Item      : [Description]
+Layer Found     : [e.g., Story vs Code]
+Source          : [who or what triggered it — client request / team initiative / edge case / Claude-generated]
 
 Effort if formal requirement/CR:
-  BA          : X hours
-  Architect   : X hours
-  Engineering : X hours
-  QA          : X hours
-  DevOps      : X hours
-  Total       : X hours
+  BA            : X hours
+  Architect     : X hours
+  Engineering   : X hours
+  QA            : X hours
+  DevOps        : X hours
+  Total         : X hours
+
+Notional CR Value : [hours × rate — left blank, management to apply rate]
 ```
 
-Management decides money value. This role provides hours only.
+Management decides money value. This role provides hours and notional CR framing only.
 
-### Step 5 — Present Findings to PM
-Role presents all delta items found, with effort diagnosis and recommended classification.
-PM decides for each item: **Accept / Charge / Remove.**
+### Step 5 — Present Findings and Tag Items
+Role presents all delta items found, with effort diagnosis. PM assigns a tag to each:
 
-Role does not proceed to document generation until PM has made decisions.
+- **D — Drift (Absorbed)** — conscious decision to absorb, log and track
+- **CR-Pending** — defer decision to next milestone reconciliation
+- **CR-Converted** — raise as billable CR immediately
+- **Remove** — remove from codebase, flag as future CR
 
-### Step 6 — Classification Outcomes
+Role does not proceed to document generation until PM has assigned tags.
 
-| Classification | What Happens |
-|---------------|-------------|
-| **Accept** | Hours logged as absorbed cost. Role asks before updating delta document. |
-| **Charge** | PM flagged to draft CR proposal and notify client. Role asks before generating delta story. |
+### Step 6 — Tag Outcomes
+
+| Tag | What Happens |
+|-----|-------------|
+| **D — Absorbed** | Logged in Drift Log as goodwill investment. Hours and notional CR value recorded. Role asks before updating. |
+| **CR-Pending** | Logged in Drift Log under deferred CR pipeline. Reviewed at next milestone reconciliation. |
+| **CR-Converted** | PM flagged to draft CR proposal and notify client. Role asks before generating delta story. |
 | **Remove** | Role asks before generating removal task. See Removal Flow below. |
 
 ### Step 7 — Removal Flow
-When PM classifies a delta item as Remove:
+When PM tags a delta item as Remove:
 
 ```
 Before I generate the removal task, please confirm:
@@ -243,16 +267,105 @@ If PM confirms:
 **Important:** Removal is a correction, not new work. It does not affect contracted hours or the baseline.
 
 ### Step 8 — Document Updates
-After all decisions are made, role asks for each document separately:
+After all tags are assigned, role asks for each document separately:
 
 ```
 Ready to update the following — confirm each:
-  1. delta-document.md — add findings from this run?
-  2. last-run.md — update with today's run summary?
-  3. run-[n]-[date]/ folder — save this run's report?
+  1. drift-log.md — add all findings from this run?
+  2. last-run.md — update with today's run summary and three totals?
+  3. run-[n]-[date]/ folder — save this run's full report?
 ```
 
 PM confirms each individually. Nothing is written without explicit approval.
+
+---
+
+## Milestone Reconciliation
+
+At the close of every sprint or milestone, all **CR-Pending** items in the Drift Log are reviewed and assigned a final tag:
+
+```
+Milestone Reconciliation — [Project Name] — [Sprint/Milestone]
+
+CR-Pending items for decision:
+  [List all CR-Pending items with hours and notional CR value]
+
+For each item, assign final tag:
+  → Absorb    : Gift to client as deliberate goodwill investment
+  → Bundle    : Hold in deferred CR pipeline for strategic moment
+  → Convert   : Raise as immediate CR with client
+```
+
+**Three reconciliation outputs reported to leadership:**
+
+| Output | Description |
+|--------|-------------|
+| **Goodwill investment** | Total notional value of Absorbed items this period — deliberate gift, not a loss |
+| **Deferred CR pipeline** | Total notional value of Bundled items — awaiting strategic presentation |
+| **Converted CR revenue** | Actual additional revenue captured from CRs raised this period |
+
+**Strategic moments to present bundled CRs to client:**
+- Mid-project review
+- Project closure
+- Renewal or expansion conversation
+
+Role asks before generating the reconciliation report.
+
+---
+
+## Bundle-Ready Flag
+
+When the deferred CR pipeline accumulates significant value, the role flags:
+
+```
+Bundle-ready alert:
+  Deferred CR pipeline for [Project Name] has reached [n] items — [x] hours notional value.
+  Recommend presenting to client at: [next strategic moment — mid-project review / closure / renewal]
+```
+
+PM decides when and how to present. Role does not draft client-facing communications.
+
+---
+
+## Drift Log Structure
+
+`forensic/drift-log.md` — the single most important artifact. Live ledger of every out-of-scope item:
+
+```
+# Drift Log — [Project Name]
+
+Last Updated      : [date]
+Total Runs        : [n]
+
+---
+
+## Running Totals
+
+Goodwill Investment (Absorbed) : [n] items — [x] hours
+Deferred CR Pipeline (Bundled) : [n] items — [x] hours
+Converted CR Revenue           : [n] items — [x] hours
+Removed                        : [n] items — [x] hours — flagged for future CR
+
+---
+
+## All Drift Items
+
+| ID | Date Logged | Description | Source | Reason Out of Baseline | Hours (actual) | Notional CR Value | Tag | Decision Owner | Reference |
+|----|------------|-------------|--------|----------------------|----------------|------------------|-----|---------------|-----------|
+| DEV-001 | [date] | [desc] | Client request | Not in module list | 12h Eng, 3h QA | [blank — mgmt applies rate] | CR-Converted | PM | CR-001 |
+| DEV-002 | [date] | [desc] | Team initiative | Edge case, not scoped | 4h Eng | [blank] | D-Absorbed | PM | Absorbed |
+| DEV-003 | [date] | [desc] | Claude-generated | Technical necessity not in stories | 20h Eng, 5h QA | [blank] | CR-Pending | — | Milestone-002 |
+| DEV-004 | [date] | [desc] | Client request | Not in module list | 8h Eng | [blank] | Remove | PM | REM-001 |
+
+---
+
+## Run History
+
+| Run | Date | Trigger | Scope | Items Found | Absorbed | CR-Pending | CR-Converted | Removed |
+|-----|------|---------|-------|------------|----------|------------|-------------|---------|
+| 001 | [date] | Story created | Epic 1 | 2 | 1 | 1 | 0 | 0 |
+| 002 | [date] | Code complete | Epic 1 | 2 | 0 | 0 | 1 | 1 |
+```
 
 ---
 
@@ -263,7 +376,7 @@ PM confirms each individually. Nothing is written without explicit approval.
 | Delta Story | `DEV-[ProjectCode]-[EpicCode]-[Seq]-[YYYY-MM-DD].md` |
 | Removal Task | `REM-[ProjectCode]-[EpicCode]-[Seq]-[YYYY-MM-DD].md` |
 | Run Report | `report.md` inside `runs/run-[n]-[YYYY-MM-DD]/` |
-| Delta Document | `forensic/delta-document.md` |
+| Drift Log | `forensic/drift-log.md` |
 | Last Run Summary | `forensic/last-run.md` |
 
 ---
@@ -276,62 +389,19 @@ PM confirms each individually. Nothing is written without explicit approval.
 Date          : [YYYY-MM-DD]
 Trigger       : [what triggered this run]
 Scope         : [what was checked]
-Delta Found   : [n] items
-Decisions     : [n] Accepted / [n] Charged / [n] Removed
+Items Found   : [n]
+Tags Assigned : [n] D-Absorbed / [n] CR-Pending / [n] CR-Converted / [n] Removed
 Next Check    : [recommended next trigger]
 
 ---
 
-# Project Forensic Summary (All Runs)
+# Project Totals (All Runs)
 
-Total Runs    : [n]
-Total Deltas  : [n] items
-
-Absorbed      : [n] items — [x] hours — business loss, management aware
-Charged       : [n] items — [x] hours — recovered via CR
-Removed       : [n] items — [x] hours — flagged for future CR
-```
-
----
-
-## delta-document.md Structure
-
-```
-# Delta Document — [Project Name]
-
-Last Updated : [date]
-Total Runs   : [n]
-
----
-
-## Project Summary
-
-Contracted Hours        : [x]
-Actual/Projected Hours  : [y]
-Total Delta Hours       : [y - x]
-
-Absorbed (business loss): [hours]
-Charged to Client       : [hours]
-Removed (avoided)       : [hours] — flagged for future CR
-
----
-
-## Run History
-
-| Run | Date | Trigger | Scope | Deltas | Accepted | Charged | Removed |
-|-----|------|---------|-------|--------|----------|---------|---------|
-| 001 | [date] | Story created | Epic 1 | 2 | 1 | 1 | 0 |
-| 002 | [date] | Code complete | Epic 1 | 1 | 0 | 0 | 1 |
-
----
-
-## All Delta Items
-
-| ID | Description | Layer | Run | Hours Impact | Classification | Reference |
-|----|-------------|-------|-----|-------------|---------------|-----------|
-| DEV-001 | [desc] | Story vs Code | 001 | +12h Eng, +3h QA | Charged | CR-001 |
-| DEV-002 | [desc] | PRD vs Stories | 001 | +4h Eng | Accepted | Absorbed |
-| DEV-003 | [desc] | Story vs Code | 002 | +20h Eng, +5h QA | Removed | Flag: future CR |
+Total Runs                     : [n]
+Goodwill Investment (Absorbed) : [n] items — [x] hours
+Deferred CR Pipeline (Bundled) : [n] items — [x] hours
+Converted CR Revenue           : [n] items — [x] hours
+Removed                        : [n] items — [x] hours — flagged for future CR
 ```
 
 ---
@@ -343,11 +413,13 @@ Removed (avoided)       : [hours] — flagged for future CR
 | PRD adds scope beyond client SOW | Baseline vs PRD check |
 | Stories add scope beyond module list | Modules vs Stories check |
 | Code adds scope beyond stories | Stories vs Code check |
+| Claude adds technical work not in stories | Stories vs Code check — Source tagged as "Claude-generated" |
 | Hours overrun per role | Effort diagnosis on every delta item |
 | Client CR creeping into baseline without decision | CR trigger — full baseline comparison |
-| Previously removed code creeping back | History check on every run |
-| Previously accepted scope quietly growing | History check flags growth |
-| Accumulated small deviations becoming large loss | Running totals in delta-document.md |
+| Small items absorbed silently because they feel trivial | Four-tag system — nothing is untagged |
+| Previously absorbed scope quietly growing | History check flags growth on every run |
+| Accumulated small deviations becoming large loss | Running totals in drift-log.md |
+| Bundled CRs never presented to client | Bundle-ready flag when pipeline reaches significant value |
 
 ---
 
@@ -360,16 +432,18 @@ Removed (avoided)       : [hours] — flagged for future CR
 - Never assumes file locations — always asks or uses what is provided
 
 ### Handing Off
-- **To PM:** Findings, classifications, CR flags — always presented before any document is created
+- **To PM:** Findings, tags, three leadership totals, bundle-ready flag when applicable
 - **To Engineering:** Removal tasks — only after PM explicitly confirms generation
 - **To PM (post-removal):** Post-removal check result — only run if PM requests it
+- **To PM (milestone):** CR-Pending items list for reconciliation at every sprint/milestone close
 
 ---
 
 ## Decision Authority
 
-- **Forensic Role** identifies, diagnoses, and presents delta — does not classify, does not auto-generate
-- **PM** decides Accept / Charge / Remove for each delta item
+- **Forensic Role** identifies, diagnoses, and presents delta — does not tag, does not auto-generate
+- **PM** assigns tags (D / CR-Pending / CR-Converted / Remove) for each delta item
 - **PM** confirms before any document is created or updated
-- **Management** decides money value (hours provided, rates not applied by this role)
+- **PM** runs milestone reconciliation and assigns Absorb / Bundle / Convert to all CR-Pending items
+- **Management** decides money value (hours and notional CR framing provided, rates not applied by this role)
 - **Engineering Role** executes removals as instructed — does not decide what to remove

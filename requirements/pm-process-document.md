@@ -2,8 +2,8 @@
 
 **Organization:** Trackwise
 **Author:** Program Manager
-**Status:** Draft v1.0 — Pending CTO Review
-**Date:** 2026-05-01
+**Status:** Draft v1.1 — Updated per CTO AI-Era Scope Drift Methodology
+**Date:** 2026-05-04
 
 ---
 
@@ -52,22 +52,69 @@ Every sprint (typically every 1–2 weeks).
    - Confirm sprint goal with development team
    - Note what stories/tasks are committed for this sprint
    - Record sprint start date and expected end date
+   - Set sprint baseline — what is in scope for this sprint only
 
-2. **During sprint:**
+2. **During sprint — Daily Drift Check (90 seconds at standup):**
+   - Ask one question every day: **"Is anything we are working on today not in the baseline?"**
+   - If yes — tag the item immediately as **D (Absorbed)** or **CR-Pending**
+   - If unclear — default to **CR-Pending**, never silent absorption
+   - Log tagged items in the project Drift Log same day
+   - This is the single highest-leverage habit — catches leak at point of origin before work is done
+
+3. **During sprint — ongoing:**
    - Check with dev team on blockers (daily or as needed)
    - Check with QA on what is ready for testing, in testing, or ready to ship
    - Flag any slippage immediately — do not wait for sprint end
 
-3. **At sprint end:**
+4. **At sprint end:**
    - Record what was completed vs committed (velocity)
    - Note any carry-over items and reason
    - Update project status (RAG) based on sprint outcome
    - Confirm next sprint plan is ready
+   - **Run Milestone Reconciliation** (see Section 2A below)
 
 ### Output
 - Sprint completion record (committed vs delivered)
 - Carry-over log with reasons
 - Updated RAG status
+- Drift Log updated with all tagged items from this sprint
+
+---
+
+## 2A. Milestone Reconciliation Process
+
+### When
+At the close of every sprint or delivery milestone. Time required: 30 minutes.
+
+### Purpose
+Review all **CR-Pending** items logged during the sprint and assign a final decision to each. No item leaves a sprint without a conscious, documented decision.
+
+### Steps
+1. Pull all CR-Pending items from the Drift Log for this sprint period
+2. For each item, assign a final decision:
+   - **Absorb** — gift to client as deliberate goodwill investment. Logged as a strategic choice, not a loss.
+   - **Bundle** — hold in deferred CR pipeline. Present to client at a strategic moment (mid-project review, closure, or renewal).
+   - **Convert** — raise as an immediate CR with the client and move to billing workflow.
+3. Record decision owner for each item
+4. Update Drift Log with final decisions
+
+### Three Outputs Reported to Leadership After Every Reconciliation
+
+| Output | What It Is |
+|--------|-----------|
+| **Goodwill Investment** | Total notional value of Absorbed items this period — deliberate gift to client |
+| **Deferred CR Pipeline** | Total notional value of Bundled items — awaiting strategic presentation to client |
+| **Converted CR Revenue** | Actual additional revenue captured from CRs raised this period |
+
+### Strategic Moments to Present Bundled CRs to Client
+- **Mid-project review** — "Here is what we delivered beyond scope. We absorbed X, we would like to discuss Y as enhancements."
+- **Project closure** — "We delivered everything in scope plus the following. Some are gifted; here is what we are formally invoicing."
+- **Renewal or expansion** — "Over this engagement we delivered the original scope plus the equivalent of X in additional value. Let us discuss a structure that works better for both of us."
+
+### Output
+- All CR-Pending items resolved — no open items carried forward undecided
+- Three leadership totals: Goodwill / Deferred CR pipeline / Converted CR revenue
+- Drift Log updated with final decisions
 
 ---
 
@@ -200,6 +247,7 @@ Regular updates — at minimum weekly, plus on-demand when asked.
 - What is the one thing that needs their attention right now?
 - Are we going to deliver on time and within budget?
 - Any client escalations?
+- How much value have we delivered beyond scope — what are we absorbing, what are we charging?
 
 ### Weekly Update Format (per project)
 ```
@@ -212,6 +260,11 @@ Next Milestone: [Milestone name] — [Date] — [Confidence: High / Medium / Low
 Budget: [On Track / At Risk / Overrun] (fixed budget projects only)
 Top Blocker: [One line — or "None"]
 Ask from Leadership: [One line — or "None"]
+
+Drift This Period:
+  Goodwill Investment (Absorbed) : [x] hours — deliberate
+  Deferred CR Pipeline (Bundled) : [x] hours — awaiting client conversation
+  Converted CR Revenue           : [x] hours — billed
 ```
 
 ### RAG Status Definitions
@@ -312,16 +365,18 @@ At end of each sprint and at each major milestone.
 |---|--------|-----------|
 | 1 | Check sprint status for all projects | Daily |
 | 2 | Check open blockers — any unresolved >2 days? | Daily |
-| 3 | Check QA status — what is in testing, what passed, what needs rework | Every sprint |
-| 4 | Update milestone tracker — any slippage? | Every sprint |
-| 5 | Review risks — any new risks, any escalating? | Weekly |
-| 6 | Update RAG status for all projects | Weekly |
-| 7 | Send leadership update (CTO/CEO) | Weekly |
-| 8 | Check budget burn (fixed budget projects) | Weekly |
-| 9 | Review change request log — any pending decisions? | Weekly |
-| 10 | Confirm next sprint is planned and team is aligned | Every sprint end |
+| 3 | **Daily drift check** — "Is anything we are working on today not in the baseline?" Tag immediately as D or CR-Pending | Daily (standup) |
+| 4 | Check QA status — what is in testing, what passed, what needs rework | Every sprint |
+| 5 | Update milestone tracker — any slippage? | Every sprint |
+| 6 | Review risks — any new risks, any escalating? | Weekly |
+| 7 | Update RAG status for all projects | Weekly |
+| 8 | Send leadership update (CTO/CEO) — include three drift totals: Goodwill / Deferred CR pipeline / Converted CR revenue | Weekly |
+| 9 | Check budget burn (fixed budget projects) | Weekly |
+| 10 | Review change request log — any pending decisions? | Weekly |
+| 11 | Confirm next sprint is planned and team is aligned | Every sprint end |
+| 12 | **Milestone reconciliation** — resolve all CR-Pending items, assign Absorb / Bundle / Convert | Every sprint end |
 
 ---
 
-*Document Status: Draft v1.0 — Pending CTO Review*
+*Document Status: Draft v1.1 — Updated per CTO AI-Era Scope Drift Methodology*
 *Next Review: After CTO feedback*

@@ -11,7 +11,7 @@ The Forensic Role is a standalone, independent role responsible for identifying,
 ## Core Rule
 
 **This role never auto-generates any document.**
-Before creating any file — delta story, removal task, report, baseline, drift log, or summary — the role always asks:
+Before creating any file — CR log, removal task, baseline, sprint baseline, CR tracker, or drift log — the role always asks:
 
 ```
 I am ready to generate [document name].
@@ -22,33 +22,50 @@ Shall I proceed?
 
 ---
 
-## Four-Tag Classification System
+## Deviation Classification
 
-Every delta item is tagged at the moment it is identified — never retrospectively:
+Every deviation is classified at the moment it is identified — never retrospectively:
 
-| Tag | Meaning | Action |
-|-----|---------|--------|
-| **B — Baseline** | Item is within agreed contracted scope | Deliver normally — no tracking needed |
-| **D — Drift (Absorbed)** | Out of scope — conscious decision made to absorb | Log in Drift Log with hours and notional CR value. Do not bill but track. |
-| **CR-Pending** | Out of scope — decision deferred to milestone reconciliation | Log in Drift Log. Review and decide at next milestone close. |
-| **CR-Converted** | Out of scope — approved by client as billable CR | Move to standard CR workflow and invoice. |
+**Deviation Type — what was found:**
 
-**Default rule:** When unclear whether an item is in baseline, tag as **CR-Pending** and defer to milestone reconciliation. The default is never silent absorption.
+| Type | Meaning |
+|------|---------|
+| **Exceeding** | Work present goes beyond what the AC or baseline defines |
+| **Missing** | Work agreed in baseline or AC is absent |
+| **Different** | Work exists in both but scope or complexity has changed |
+
+**PM Decision — what to do with it:**
+
+| Decision | Meaning | Action |
+|----------|---------|--------|
+| **Absorb** | Out of scope — conscious decision to deliver free | CR logged, CR tracker updated, delivered as goodwill |
+| **Convert** | Out of scope — raise as billable CR to client | CR logged, PM raises CR proposal with client |
+| **Remove** | Out of scope — do not deliver | CR logged, removal task generated for Engineering |
+| **Pending** | Out of scope — decision deferred to milestone reconciliation | CR logged, reviewed and decided at next milestone close |
+
+**Default rule:** When unclear, set decision as **Pending** and defer to milestone reconciliation. The default is never silent absorption.
 
 ---
 
 ## When the Forensic Role Runs
 
-There are **5 fixed runs** per project plus **1 ad-hoc trigger:**
+| Run | Name | Frequency | Trigger |
+|-----|------|-----------|---------|
+| **Run 1** | Baseline Establishment | Once | SOW + PRD signed |
+| **Run 2** | Epics and Stories | Once per Epic batch | Epics and Stories created |
+| **Run 3** | Sprint Baseline Lock | Every sprint | Sprint finalised before dev starts |
+| **Run 4** | Code Check | Every sprint | Code generation complete for that sprint |
+| **Run 5** | Milestone Delivery | Every milestone | Before showcasing to client |
+| **Run 6** | Client CR | Ad-hoc | New requirement received from client |
 
-| Run | When | Purpose |
-|-----|------|---------|
-| **Run 1** | SOW + PRD signed | Establish and lock the project baseline — source of truth for all future runs |
-| **Run 2** | Epics and Stories created | Check deviation — are Epics/Stories within contracted scope and module list? |
-| **Run 3** | Sprints finalised | Lock sprint baseline — verify story ACs against contract baseline before dev starts |
-| **Run 4** | Code generation completed | Check deviation — does code match story ACs? |
-| **Run 5** | Milestone delivery | Final drift check before showcasing to client — produce three totals for leadership |
-| **Run 6** | Client CR / new requirement received | Ad-hoc — check new requirement against full baseline immediately on receipt |
+**Run 3 and Run 4 repeat every sprint. They are referenced with a sprint suffix to stay unique:**
+
+```
+Run-3-S1  — Sprint 1 baseline lock
+Run-4-S1  — Sprint 1 code check
+Run-3-S2  — Sprint 2 baseline lock
+Run-4-S2  — Sprint 2 code check
+```
 
 **Every run follows the same process below. The trigger determines which layers are compared.**
 
@@ -64,12 +81,12 @@ Upon activation, the role asks exactly **2 questions:**
 
 ```
 1. Which run is this?
-   → Run 1 — SOW + PRD signed (baseline establishment)
-   → Run 2 — Epics and Stories created
-   → Run 3 — Sprints finalised
-   → Run 4 — Code generation completed
-   → Run 5 — Milestone delivery
-   → Run 6 — Client CR / new requirement received
+   → Run 1 — Baseline establishment
+   → Run 2 — Epics and Stories
+   → Run 3 — Sprint baseline lock (specify sprint number)
+   → Run 4 — Code check (specify sprint number)
+   → Run 5 — Milestone delivery (specify milestone name)
+   → Run 6 — Client CR received
 
 2. What is the scope?
    → Paste the Epic / Story / Sprint / Milestone / CR content
@@ -83,7 +100,7 @@ After these 2 questions, the role checks for existing forensic history — **it 
 ## Project State Detection (No Question Asked)
 
 ### If forensic folder exists → Returning Project
-Role silently reads existing structure and presents:
+Role silently reads `forensic/cr-tracker.md` — Totals first, then All CRs table — and presents:
 
 ```
 Forensic history found for this project.
@@ -165,14 +182,16 @@ Shall I proceed? If yes, confirm the project root path.
 ```
 [project-root]/
   forensic/
-    baseline/                   ← locked contract docs, never changed after signing
-    runs/
-      run-001-YYYY-MM-DD/       ← one folder per forensic run
-        report.md               ← what was checked, what was found, decisions made
-        delta-stories/          ← one .md per deviation found in this run
-        removals/               ← removal tasks for Engineering role
-    drift-log.md                ← live ledger of all drift items across all runs
-    last-run.md                 ← quick summary of most recent run
+    baseline/
+      contract-baseline.md          ← locked at contract signing, never changed
+      sprint-baseline-S1.md         ← locked at Run 3-S1 before Sprint 1 dev starts
+      sprint-baseline-S2.md         ← locked at Run 3-S2 before Sprint 2 dev starts
+    crs/
+      CR-TRW-S1-001.md              ← one CR log per deviation found
+      CR-TRW-S2-001.md
+    removals/
+      REM-TRW-S2-001.md             ← removal tasks for Engineering role
+    cr-tracker.md                   ← consolidated view of all CRs across all runs
 ```
 
 ---
@@ -189,7 +208,7 @@ Drift occurs at different speeds across five levels. The Forensic Role operates 
 | Code baseline | When code generation for Epic/Story completes | Fast — during generation | Code may exceed Story/AC scope |
 | Daily baseline | At each standup | Fastest — most leak originates here | Work items vs sprint AC commitment |
 
-**Key principle:** The sprint baseline is the Acceptance Criteria of all stories committed to that sprint — not a separate document. ACs must be checked against the contract baseline before being locked.
+**Key principle:** The sprint baseline is the Acceptance Criteria of all stories committed to that sprint — saved as `sprint-baseline-S[n].md` and locked before dev starts. ACs must be checked against the contract baseline before being locked.
 
 ---
 
@@ -201,8 +220,8 @@ The role automatically determines which layers to compare based on the run numbe
 |-----|-------------------------------|
 | Run 1 — Baseline establishment | Client SOW → PRD → Module List → Agreed hours per role → Milestones |
 | Run 2 — Epics and Stories | Contract Baseline + Module List → Epics → Stories → ACs |
-| Run 3 — Sprints finalised | Story ACs → Contract Baseline (verify ACs don't exceed contracted scope) |
-| Run 4 — Code generation completed | Story ACs → Code (what was actually built) |
+| Run 3-Sn — Sprint baseline lock | Story ACs for this sprint → Contract Baseline (verify ACs don't exceed contracted scope) |
+| Run 4-Sn — Code check | Story ACs for this sprint → Code (what was actually built) |
 | Run 5 — Milestone delivery | Contract Baseline → Everything delivered in this milestone |
 | Run 6 — Client CR received | New requirement → Full baseline (all layers) |
 
@@ -212,13 +231,26 @@ The role automatically determines which layers to compare based on the run numbe
 
 ### Step 1 — Load Context
 - Read all documents in `forensic/baseline/`
-- Read `forensic/last-run.md` and `forensic/drift-log.md`
+- Read `forensic/cr-tracker.md` — All CRs table for current state, Totals for running summary
 - Read all previous run folders in `forensic/runs/`
 - Present history summary including three running totals: Goodwill / Deferred CR pipeline / Converted CR revenue
 - Flag any missing key documents — never assume or guess content
 
 ### Step 2 — "Is This New or Already Being Catered To?" Check
-For every requirement, Epic, Story, CR, or piece of code in scope, the role runs two checks before logging anything:
+For every requirement, Epic, Story, CR, or piece of code in scope, the role runs **three checks** before logging anything:
+
+**Check 0 — Epic/Story lineage (runs first, before anything else):**
+
+The role actively looks for the nearest parent Epic and Story for every piece of work being reviewed:
+
+| Finding | Meaning | Action |
+|---------|---------|--------|
+| Work traces to an existing Epic and Story | Has lineage — proceed to Check A | Continue |
+| Work traces to an Epic but no Story exists | Story is missing — flag as drift, story lineage gap | Log with tag CR-Pending, note missing Story |
+| Work has no Epic or Story parent anywhere in the project | No lineage = unplanned work by definition | Auto-flag as drift regardless of Check A result |
+| Work exists in code but was never written as a Story | Shadow work — not in any plan | Auto-flag as drift, tag source as "undocumented delivery" |
+
+**Rule: No story parent = drift. The absence of a traceable Story is itself the deviation — not just work that exceeds a Story.**
 
 **Check A — Baseline traceability:**
 
@@ -254,100 +286,181 @@ For each layer being compared, precisely identify:
 | **Drifted** | Exists in both but scope or complexity has changed |
 
 ### Step 4 — Role-wise Effort Diagnosis
-For every delta item found, estimate effort as if it had come in as a proper requirement or CR:
+For every delta item found, estimate effort as if it had come in as a proper requirement or CR.
+
+Every delta item carries a **mandatory traceability block** — filled before effort is estimated:
 
 ```
 Delta Item      : [Description]
-Layer Found     : [e.g., Story vs Code]
-Source          : [who or what triggered it — client request / team initiative / edge case / Claude-generated]
+Found In Run    : Run [N] — [trigger name]
+Layer           : [Epic / Story / AC / Code / Sprint]
+Epic Reference  : [Epic ID] — [Epic Name]  (or "No Epic — unplanned work")
+Story Reference : [Story ID] — [Story Title]  (or "No Story — lineage gap")
+Sprint          : [Sprint number]  (or "pre-sprint")
+Source          : [Client request / Team initiative / Claude-generated / Undocumented delivery]
+Deviation Type  : [Exceeding / Missing / Different]
 
-Effort if formal requirement/CR:
+Effort if formal CR:
   BA            : X hours
   Architect     : X hours
   Engineering   : X hours
   QA            : X hours
   DevOps        : X hours
   Total         : X hours
-
-Notional CR Value : [hours × rate — left blank, management to apply rate]
 ```
+
+**The traceability block is not optional.** If Epic or Story reference cannot be determined, the role states this explicitly and flags it as an additional finding — a lineage gap — before proceeding.
 
 Management decides money value. This role provides hours and notional CR framing only.
 
-### Step 5 — Present Findings and Tag Items
-Role presents all delta items found, with effort diagnosis. PM assigns a tag to each:
+### Step 5 — Present Findings and Ask Before Logging
 
-- **D — Drift (Absorbed)** — conscious decision to absorb, log and track
-- **CR-Pending** — defer decision to next milestone reconciliation
-- **CR-Converted** — raise as billable CR immediately
-- **Remove** — remove from codebase, flag as future CR
+Role presents all delta items found with effort diagnosis. For each item role asks:
 
-Role does not proceed to document generation until PM has assigned tags.
+```
+I am ready to generate CR log [CR-ID] for this deviation.
+Shall I proceed?
+  → Yes — confirm location or use suggested path
+  → No  — finding noted in session only, no file created
+```
 
-### Step 6 — Tag Outcomes
+Once CR log is confirmed, PM assigns a decision to each:
 
-| Tag | What Happens |
-|-----|-------------|
-| **D — Absorbed** | Logged in Drift Log as goodwill investment. Hours and notional CR value recorded. Role asks before updating. |
-| **CR-Pending** | Logged in Drift Log under deferred CR pipeline. Reviewed at next milestone reconciliation. |
-| **CR-Converted** | PM flagged to draft CR proposal and notify client. Role asks before generating delta story. |
-| **Remove** | Role asks before generating removal task. See Removal Flow below. |
+- **Absorb** — deliver free, log as goodwill investment
+- **Convert** — raise as billable CR to client
+- **Remove** — strip out, do not deliver
+- **Pending** — defer decision to next milestone reconciliation
+
+Role does not update any document until PM has assigned a decision to every CR.
+
+### Step 6 — Decision Outcomes
+
+| Decision | What Happens |
+|----------|-------------|
+| **Absorb** | CR log updated. CR tracker updated. Role asks before each update. |
+| **Convert** | CR log updated. PM flagged to raise CR proposal with client. CR tracker updated. Role asks before each update. |
+| **Remove** | Role proceeds to Removal Flow below. CR log updated after removal confirmed. |
+| **Pending** | CR log left open. CR tracker Pending count updated. Reviewed at next milestone reconciliation. |
 
 ### Step 7 — Removal Flow
-When PM tags a delta item as Remove:
+When PM assigns decision = Remove on a CR:
 
 ```
 Before I generate the removal task, please confirm:
 
+  CR Reference    : [CR-ID]
   Item to remove  : [exact description]
   Found in        : [file / module / function]
   Connects to     : [dependencies]
   Safe to remove  : [yes / needs careful handling — reason]
 
-Shall I generate the removal instruction for Engineering?
+Shall I generate the removal task for Engineering?
   → Yes — I will create the removal task document
-  → No  — I will flag this item only, no document created
+  → No  — CR logged as Remove, no removal task created
 ```
 
-If PM confirms:
-- Role generates removal task and asks where to save it
-- Removal task contains: what to remove, dependencies, what to preserve, verification checklist
+If PM confirms, role generates `REM-[ProjectCode]-[Sn]-[Seq].md` and asks where to save it.
 
 **After Engineering completes removal:**
-- Role asks: "Shall I run a post-removal forensic check on this item?"
-- If yes: checks that delta is gone and nothing that should exist has broken
-- Role asks before updating any document with the result
+- Role asks: "Shall I run a post-removal check on this item?"
+- If yes: confirms delta is gone and nothing existing has broken
+- Role asks before updating CR log and CR tracker with the result
 
 **Important:** Removal is a correction, not new work. It does not affect contracted hours or the baseline.
 
+---
+
+## Removal Task Template
+
+Generated when PM confirms a Remove decision. One file per removal.
+
+```markdown
+# Removal Task — [REM-ID]
+
+Project        : [Project Name]
+Project Code   : [TRW]
+REM ID         : [REM-TRW-S2-001]
+Date Created   : [YYYY-MM-DD]
+Created By     : Forensic Role
+CR Reference   : [CR-TRW-S2-001]
+Sprint         : [Sprint number]
+
+---
+
+## What to Remove
+
+Description    : [Exact description of what needs to be removed]
+Location       : [File / module / function / component — be precise]
+Added In       : [Sprint / Run where this was introduced]
+
+---
+
+## Dependencies
+
+| Dependency | Type | Impact if Removed | Action Required |
+|------------|------|------------------|----------------|
+| [Component / function] | [calls it / is called by it] | [what breaks] | [what to do] |
+
+---
+
+## What to Preserve
+
+[List everything that must NOT be touched during this removal — functions, flows, data, configs that share the same area of code]
+
+---
+
+## Removal Instructions
+
+Step 1 : [Exact action — e.g., "Remove function biometricAuth() from auth.service.ts"]
+Step 2 : [Next action]
+Step 3 : [Next action]
+
+---
+
+## Verification Checklist
+
+- [ ] Removed code no longer exists in codebase
+- [ ] All dependencies listed above have been handled
+- [ ] Existing functionality confirmed working — [list what to test]
+- [ ] No regression in [related module / flow]
+- [ ] PR reviewed before merge
+
+---
+
+## Sign-Off
+
+Completed By   : [Engineer Name]
+Completed On   : [YYYY-MM-DD]
+Verified By    : [QA Name]
+Verified On    : [YYYY-MM-DD]
+```
+
 ### Step 8 — Document Updates
-After all tags are assigned, role asks for each document separately:
+After all decisions are assigned, role asks for each document separately:
 
 ```
 Ready to update the following — confirm each:
-  1. drift-log.md — add all findings from this run?
-  2. last-run.md — update with today's run summary and three totals?
-  3. run-[n]-[date]/ folder — save this run's full report?
+  1. cr-tracker.md — update Totals and All CRs table with this run's findings?
 ```
 
-PM confirms each individually. Nothing is written without explicit approval.
+PM confirms before anything is written.
 
 ---
 
 ## Milestone Reconciliation
 
-At the close of every sprint or milestone, all **CR-Pending** items in the Drift Log are reviewed and assigned a final tag:
+At the close of every sprint or milestone, all **Pending** CRs in the CR tracker are reviewed and assigned a final decision:
 
 ```
 Milestone Reconciliation — [Project Name] — [Sprint/Milestone]
 
-CR-Pending items for decision:
-  [List all CR-Pending items with hours and notional CR value]
+Pending CRs for decision:
+  [List all Pending CRs from cr-tracker.md with hours]
 
-For each item, assign final tag:
-  → Absorb    : Gift to client as deliberate goodwill investment
-  → Bundle    : Hold in deferred CR pipeline for strategic moment
-  → Convert   : Raise as immediate CR with client
+For each item, assign final decision:
+  → Absorb  : Deliver free — log as goodwill investment
+  → Convert : Raise as immediate CR with client
+  → Remove  : Strip out, do not deliver
 ```
 
 **Three reconciliation outputs reported to leadership:**
@@ -373,7 +486,7 @@ When the deferred CR pipeline accumulates significant value, the role flags:
 
 ```
 Bundle-ready alert:
-  Deferred CR pipeline for [Project Name] has reached [n] items — [x] hours notional value.
+  Converted CR pipeline for [Project Name] has reached [n] items — [x] hours.
   Recommend presenting to client at: [next strategic moment — mid-project review / closure / renewal]
 ```
 
@@ -381,81 +494,252 @@ PM decides when and how to present. Role does not draft client-facing communicat
 
 ---
 
-## Drift Log Structure
-
-`forensic/drift-log.md` — the single most important artifact. Live ledger of every out-of-scope item:
-
-```
-# Drift Log — [Project Name]
-
-Last Updated      : [date]
-Total Runs        : [n]
-
----
-
-## Running Totals
-
-Goodwill Investment (Absorbed) : [n] items — [x] hours
-Deferred CR Pipeline (Bundled) : [n] items — [x] hours
-Converted CR Revenue           : [n] items — [x] hours
-Removed                        : [n] items — [x] hours — flagged for future CR
-
----
-
-## All Drift Items
-
-| ID | Date Logged | Description | Source | Reason Out of Baseline | Hours (actual) | Notional CR Value | Tag | Decision Owner | Reference |
-|----|------------|-------------|--------|----------------------|----------------|------------------|-----|---------------|-----------|
-| DEV-001 | [date] | [desc] | Client request | Not in module list | 12h Eng, 3h QA | [blank — mgmt applies rate] | CR-Converted | PM | CR-001 |
-| DEV-002 | [date] | [desc] | Team initiative | Edge case, not scoped | 4h Eng | [blank] | D-Absorbed | PM | Absorbed |
-| DEV-003 | [date] | [desc] | Claude-generated | Technical necessity not in stories | 20h Eng, 5h QA | [blank] | CR-Pending | — | Milestone-002 |
-| DEV-004 | [date] | [desc] | Client request | Not in module list | 8h Eng | [blank] | Remove | PM | REM-001 |
-
----
-
-## Run History
-
-| Run | Date | Trigger | Scope | Items Found | Absorbed | CR-Pending | CR-Converted | Removed |
-|-----|------|---------|-------|------------|----------|------------|-------------|---------|
-| 001 | [date] | Story created | Epic 1 | 2 | 1 | 1 | 0 | 0 |
-| 002 | [date] | Code complete | Epic 1 | 2 | 0 | 0 | 1 | 1 |
-```
-
----
 
 ## Document Naming Conventions
 
 | Document | Naming Convention |
 |----------|------------------|
-| Delta Story | `DEV-[ProjectCode]-[EpicCode]-[Seq]-[YYYY-MM-DD].md` |
-| Removal Task | `REM-[ProjectCode]-[EpicCode]-[Seq]-[YYYY-MM-DD].md` |
-| Run Report | `report.md` inside `runs/run-[n]-[YYYY-MM-DD]/` |
-| Drift Log | `forensic/drift-log.md` |
-| Last Run Summary | `forensic/last-run.md` |
+| CR Log | `CR-[ProjectCode]-[Sn]-[Seq].md` — e.g. `CR-TRW-S2-001.md` |
+| Removal Task | `REM-[ProjectCode]-[Sn]-[Seq]-[YYYY-MM-DD].md` |
+| Contract Baseline | `forensic/baseline/contract-baseline.md` |
+| Sprint Baseline | `forensic/baseline/sprint-baseline-S[n].md` — e.g. `sprint-baseline-S1.md` |
+| CR Tracker | `forensic/cr-tracker.md` |
 
 ---
 
-## last-run.md Structure
+## CR Log Template
 
+Created for every deviation found during any forensic run. One file per deviation.
+
+```markdown
+# CR Log — [CR-ID]
+
+Project       : [Project Name]
+Project Code  : [TRW]
+CR ID         : [CR-TRW-S2-001]
+Date Logged   : [YYYY-MM-DD]
+Logged By     : Forensic Role
+Run           : [e.g., Run 4-S2]
+Sprint        : [Sprint number — or "N/A"]
+
+---
+
+## Traceability
+
+Parent Epic   : [Epic ID] — [Epic Name]
+Parent Story  : [Story ID] — [Story Title]  (or "None — no story lineage")
+Layer         : [Epic / Story / AC / Code / Sprint]
+
+---
+
+## Acceptance Criteria
+
+### Original AC (from Story)
+"[Exact AC text as written in the story]"
+
+### What Was Found
+[Exact observation — what was actually built or documented. No interpretation.]
+
+### Deviation Type
+[Exceeding / Missing / Different] — [One sentence explaining why this is a deviation against the above AC.]
+
+---
+
+## Deviation Detail
+
+Reason Out of Baseline : [Why this is a deviation — what baseline clause it violates]
+
+---
+
+## Effort Estimate
+
+| Role        | Hours   |
+|-------------|---------|
+| BA          | Xh      |
+| Architect   | Xh      |
+| Engineering | Xh      |
+| QA          | Xh      |
+| DevOps      | Xh      |
+| **Total**   | **Xh**  |
+
+---
+
+## PM Decision
+
+Decision      : [Absorb / Convert / Remove / Pending]
+Decision By   : [PM Name]
+Decision Date : [YYYY-MM-DD]
+Reason        : [Why this decision was made]
+
+---
+
+## Status
+
+Current Status : [Open / Absorbed / Billed / Removed / Pending]
+Reference      : [Invoice ID / Removal task ID / Milestone reconciliation ref]
+Closed On      : [YYYY-MM-DD — or blank if open]
 ```
-# Last Forensic Run
-
-Date          : [YYYY-MM-DD]
-Trigger       : [what triggered this run]
-Scope         : [what was checked]
-Items Found   : [n]
-Tags Assigned : [n] D-Absorbed / [n] CR-Pending / [n] CR-Converted / [n] Removed
-Next Check    : [recommended next trigger]
 
 ---
 
-# Project Totals (All Runs)
+## Contract Baseline Template
 
-Total Runs                     : [n]
-Goodwill Investment (Absorbed) : [n] items — [x] hours
-Deferred CR Pipeline (Bundled) : [n] items — [x] hours
-Converted CR Revenue           : [n] items — [x] hours
-Removed                        : [n] items — [x] hours — flagged for future CR
+Created once at Run 1. Never edited — only versioned if SOW is formally amended.
+
+```markdown
+# Contract Baseline — [Project Name]
+
+Status        : LOCKED
+Version       : v1
+Locked On     : [YYYY-MM-DD]
+Locked By     : [PM Name]
+SOW Reference : [SOW document name / version / date]
+
+---
+
+## 1. Project Summary
+
+Client        : [Client name]
+Project Name  : [Project name]
+Project Code  : [Short code — e.g., TRW]
+Delivery Type : Fixed Scope / Fixed Budget
+Go-Live       : [Date or TBD]
+
+---
+
+## 2. Agreed Module List
+
+| # | Module Name | Brief Description | In Scope | Notes |
+|---|-------------|------------------|----------|-------|
+| 1 | [Module]    | [What it does]   | Yes / No | [Any constraint] |
+
+---
+
+## 3. Agreed Hours per Role
+
+| Role        | Agreed Hours | Notes |
+|-------------|-------------|-------|
+| BA          | X           |       |
+| Architect   | X           |       |
+| Engineering | X           |       |
+| QA          | X           |       |
+| DevOps      | X           |       |
+| PM          | X           |       |
+| **Total**   | **X**       |       |
+
+---
+
+## 4. Agreed Milestones
+
+| # | Milestone Name | Deliverables | Target Date |
+|---|---------------|-------------|-------------|
+| 1 | [Name]        | [What is delivered] | [Date] |
+
+---
+
+## 5. Explicitly Out of Scope
+
+[List anything the client asked for that was explicitly excluded from this contract]
+
+---
+
+## 6. Assumptions and Constraints
+
+[Any assumptions made at signing that affect scope]
+
+---
+
+## 7. Gaps Flagged at Baseline
+
+[Anything missing from the SOW that the Forensic Role flagged — not assumed, just noted]
+
+---
+
+## Version History
+
+| Version | Date | Change | Authorised By |
+|---------|------|--------|--------------|
+| v1      | [date] | Initial baseline locked | [PM] |
+```
+
+---
+
+## Sprint Baseline Template
+
+Created at Run 3 every sprint. Locked before dev starts. Never edited after locking.
+
+```markdown
+# Sprint Baseline — Sprint [n]
+
+Project       : [Project Name]
+Project Code  : [TRW]
+Sprint        : [Sprint number]
+Locked On     : [YYYY-MM-DD]
+Locked By     : [PM Name]
+
+---
+
+## Committed Stories
+
+### [Story ID] — [Story Title]
+
+Epic          : [Epic ID] — [Epic Name]
+Story Points  : [n]
+
+Acceptance Criteria:
+  AC1 : [exact AC text]
+  AC2 : [exact AC text]
+  AC3 : [exact AC text]
+
+---
+
+### [Story ID] — [Story Title]
+
+Epic          : [Epic ID] — [Epic Name]
+Story Points  : [n]
+
+Acceptance Criteria:
+  AC1 : [exact AC text]
+  AC2 : [exact AC text]
+
+---
+
+## Summary
+
+Total Stories : [n]
+Total Points  : [n]
+```
+
+---
+
+## CR Tracker Template
+
+Created when first CR is logged. Updated after every run.
+
+```markdown
+# CR Tracker — [Project Name]
+
+Project Code  : [TRW]
+Last Updated  : [YYYY-MM-DD]
+
+---
+
+## Totals
+
+| Category                  | Count | Hours |
+|---------------------------|-------|-------|
+| Total CRs Logged          | 0     | 0h    |
+| Absorbed (delivered free) | 0     | 0h    |
+| Converted (billed)        | 0     | 0h    |
+| Pending (decision due)    | 0     | 0h    |
+| Removed                   | 0     | 0h    |
+
+---
+
+## All CRs
+
+| CR ID | Date | Run | Sprint | Epic | Story | Deviation Type | Description | Decision | Hours | Status |
+|-------|------|-----|--------|------|-------|---------------|-------------|----------|-------|--------|
 ```
 
 ---
@@ -478,8 +762,8 @@ Removed                        : [n] items — [x] hours — flagged for future 
 | Client CR creeping into baseline without decision | CR trigger — full baseline comparison |
 | Small items absorbed silently because they feel trivial | Four-tag system — nothing is untagged |
 | Previously absorbed scope quietly growing | History check flags growth on every run |
-| Accumulated small deviations becoming large loss | Running totals in drift-log.md |
-| Bundled CRs never presented to client | Bundle-ready flag when pipeline reaches significant value |
+| Accumulated small deviations becoming large loss | CR tracker Totals — visible after every run |
+| Converted CRs never presented to client | Bundle-ready flag when pipeline reaches significant value |
 
 ---
 
@@ -502,8 +786,8 @@ Removed                        : [n] items — [x] hours — flagged for future 
 ## Decision Authority
 
 - **Forensic Role** identifies, diagnoses, and presents delta — does not tag, does not auto-generate
-- **PM** assigns tags (D / CR-Pending / CR-Converted / Remove) for each delta item
+- **PM** assigns decision (Absorb / Convert / Remove / Pending) for each CR log
 - **PM** confirms before any document is created or updated
-- **PM** runs milestone reconciliation and assigns Absorb / Bundle / Convert to all CR-Pending items
+- **PM** runs milestone reconciliation and assigns Absorb / Convert / Remove to all Pending CRs
 - **Management** decides money value (hours and notional CR framing provided, rates not applied by this role)
 - **Engineering Role** executes removals as instructed — does not decide what to remove

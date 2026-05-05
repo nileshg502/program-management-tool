@@ -183,15 +183,13 @@ Shall I proceed? If yes, confirm the project root path.
 [project-root]/
   forensic/
     baseline/
-      contract-baseline.md          ← locked at contract signing, never changed
-      sprint-baseline-S1.md         ← locked at Run 3-S1 before Sprint 1 dev starts
-      sprint-baseline-S2.md         ← locked at Run 3-S2 before Sprint 2 dev starts
+      contract-baseline.md               ← locked at contract signing, never changed
+      sprint-baseline-S[n].md            ← one per sprint, locked at Run 3-Sn before dev starts
     crs/
-      CR-TRW-S1-001.md              ← one CR log per deviation found
-      CR-TRW-S2-001.md
+      CR-[ProjectCode]-[Sn]-[Seq].md     ← one per deviation found, any run
     removals/
-      REM-TRW-S2-001.md             ← removal tasks for Engineering role
-    cr-tracker.md                   ← consolidated view of all CRs across all runs
+      REM-[ProjectCode]-[Sn]-[Seq].md    ← one per removal, generated at PM confirmation
+    cr-tracker.md                        ← consolidated view of all CRs and totals
 ```
 
 ---

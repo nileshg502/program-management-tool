@@ -140,16 +140,17 @@ Role requests baseline documents to establish starting position (see Baseline Es
 **If B — Already Running:**
 Role says:
 ```
-Since development is already underway, I will run an Initial Baseline Forensic.
+Since work is already underway I will run an Initial Baseline Forensic.
 This will:
-  1. Establish what was originally agreed (baseline)
-  2. Compare against what has been built or documented so far
-  3. Identify all delta accumulated to date — including any previously absorbed silently
-  4. Give you a clean starting position for ongoing forensic tracking
+  1. Establish the contract baseline from your documents
+  2. Sweep all Epics and Stories in the repo against the baseline
+  3. Read code for each Story and check against Story ACs
+  4. Log all deviations found as CRs
+  5. Give you a clean starting position for ongoing forensic tracking
 
-To begin, I need the baseline documents first.
+To begin I need the baseline documents first.
 ```
-Then proceeds to Baseline Establishment.
+Then proceeds to Baseline Establishment, followed by the Initial Baseline Forensic flow below.
 
 ---
 
@@ -191,6 +192,78 @@ Shall I proceed? If yes, confirm the project root path.
       REM-[ProjectCode]-[Sn]-[Seq].md    ← one per removal, generated at PM confirmation
     cr-tracker.md                        ← consolidated view of all CRs and totals
 ```
+
+---
+
+## Initial Baseline Forensic — Existing Projects
+
+This flow runs once when an existing project is onboarded into forensic tracking for the first time. It replaces the standard Run 1 → Run 2 → Run 3 sequence for work already completed.
+
+### Phase 1 — Baseline Establishment
+
+Same as a new project. Role asks for SOW, module list, agreed hours, milestones and creates `contract-baseline.md`. Role asks before saving.
+
+### Phase 2 — Codebase Path
+
+Role asks once:
+
+```
+Please provide the root path of the codebase.
+I will navigate the code myself from this point.
+```
+
+### Phase 3 — Epic and Story Sweep
+
+Role reads all Epics and Stories from the repo. For each Story, two checks are run automatically:
+
+**Check 1 — Story AC vs Contract Baseline**
+
+```
+For each Story AC:
+  → Traceable to contract baseline     = no deviation — move on
+  → Not traceable to contract baseline = CR logged (Exceeding / Missing / Different)
+```
+
+**Check 2 — Code vs Story AC**
+
+```
+For each Story:
+  Role reads code at codebase path
+  → Code matches AC exactly  = no deviation — move on
+  → Code does more than AC   = CR logged (Exceeding)
+  → Code does less than AC   = CR logged (Missing)
+```
+
+### Phase 4 — Present Findings
+
+After sweep is complete, role presents summary before generating any CR logs:
+
+```
+Initial Baseline Forensic — Sweep Complete
+
+Epics reviewed   : [n]
+Stories reviewed : [n]
+CRs found        : [n]
+  Exceeding      : [n]
+  Missing        : [n]
+  Different      : [n]
+
+Shall I generate CR logs for all findings?
+  → Yes — I will create one CR log per deviation
+  → No  — findings noted in session only, no files created
+```
+
+### Phase 5 — CR Logs and PM Decisions
+
+Role generates one CR log per deviation. PM assigns a decision to each — Absorb / Convert / Remove / Pending. Role updates `cr-tracker.md` after all decisions are assigned.
+
+### Phase 6 — Forward Tracking
+
+From this point the project runs the standard forensic cycle:
+- Run 3-Sn — every sprint before dev starts
+- Run 4-Sn — every sprint after code complete
+- Run 5 — every milestone
+- Run 6 — ad-hoc on client CR received
 
 ---
 

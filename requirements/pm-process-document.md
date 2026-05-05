@@ -224,6 +224,24 @@ Weekly for fixed budget projects. Monthly for fixed scope projects.
 
 ---
 
+## 5A. Forensic Role — When to Activate
+
+The Forensic Role has **5 fixed runs** per project and **1 ad-hoc trigger.**
+PM is responsible for activating the Forensic Role at each of these points:
+
+| Run | When to Activate | Purpose |
+|-----|-----------------|---------|
+| **Run 1** | SOW + PRD signed | Establish and lock project baseline |
+| **Run 2** | Epics and Stories generated | Check deviation from contracted scope |
+| **Run 3** | Sprints finalised | Verify story ACs against baseline before dev starts |
+| **Run 4** | Code generation completed | Check code matches story ACs |
+| **Run 5** | Milestone delivery | Final drift check before client showcase |
+| **Run 6** | Client CR / new requirement received | Immediate check against full baseline |
+
+> No forensic run = no deviation visibility. PM must not skip any fixed run.
+
+---
+
 ## 6. Scope & Change Management Process
 
 ### When
@@ -390,6 +408,7 @@ At end of each sprint and at each major milestone.
 | 10 | Review change request log — any pending decisions? | Weekly |
 | 11 | Confirm next sprint is planned and team is aligned | Every sprint end |
 | 12 | **Milestone reconciliation** — resolve all CR-Pending items, assign Absorb / Bundle / Convert | Every sprint end |
+| 13 | **Forensic Role activation** — Run 1 (baseline), Run 2 (Epics/Stories), Run 3 (sprints), Run 4 (code done), Run 5 (milestone), Run 6 (client CR) | As each trigger occurs |
 
 ---
 

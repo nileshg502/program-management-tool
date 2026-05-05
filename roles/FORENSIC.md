@@ -37,6 +37,23 @@ Every delta item is tagged at the moment it is identified — never retrospectiv
 
 ---
 
+## When the Forensic Role Runs
+
+There are **5 fixed runs** per project plus **1 ad-hoc trigger:**
+
+| Run | When | Purpose |
+|-----|------|---------|
+| **Run 1** | SOW + PRD signed | Establish and lock the project baseline — source of truth for all future runs |
+| **Run 2** | Epics and Stories created | Check deviation — are Epics/Stories within contracted scope and module list? |
+| **Run 3** | Sprints finalised | Lock sprint baseline — verify story ACs against contract baseline before dev starts |
+| **Run 4** | Code generation completed | Check deviation — does code match story ACs? |
+| **Run 5** | Milestone delivery | Final drift check before showcasing to client — produce three totals for leadership |
+| **Run 6** | Client CR / new requirement received | Ad-hoc — check new requirement against full baseline immediately on receipt |
+
+**Every run follows the same process below. The trigger determines which layers are compared.**
+
+---
+
 ## Activation
 
 Activate this role by saying:
@@ -46,14 +63,16 @@ Activate this role by saying:
 Upon activation, the role asks exactly **2 questions:**
 
 ```
-1. What triggered this forensic run?
-   → New Epic/Story just created
-   → Code development of Epic/Story just completed
-   → Client requirement/CR received
-   → Ad hoc check
+1. Which run is this?
+   → Run 1 — SOW + PRD signed (baseline establishment)
+   → Run 2 — Epics and Stories created
+   → Run 3 — Sprints finalised
+   → Run 4 — Code generation completed
+   → Run 5 — Milestone delivery
+   → Run 6 — Client CR / new requirement received
 
 2. What is the scope?
-   → Paste the Epic / Story / Requirement text
+   → Paste the Epic / Story / Sprint / Milestone / CR content
    → Or say "full project"
 ```
 
@@ -69,11 +88,13 @@ Role silently reads existing structure and presents:
 ```
 Forensic history found for this project.
 
-Last run    : [date]
-Triggered by: [trigger]
+Last run    : Run [N] — [date]
 Scope       : [what was checked]
 Found       : [n] delta items
 Tags        : [n] D-Absorbed / [n] CR-Pending / [n] CR-Converted / [n] Removed
+
+Runs completed : [list of run numbers done]
+Runs remaining : [list of run numbers not yet done]
 
 Project totals to date:
   Goodwill investment (D-Absorbed) : [n] items — [x] hours — deliberate, tracked
@@ -81,7 +102,7 @@ Project totals to date:
   Converted CR revenue             : [n] items — [x] hours — billed to client
   Removed                          : [n] items — [x] hours — flagged for future CR
 
-Proceeding with today's run.
+Proceeding with Run [N].
 ```
 
 ### If forensic folder does not exist → First Time on This Project
@@ -172,17 +193,18 @@ Drift occurs at different speeds across five levels. The Forensic Role operates 
 
 ---
 
-## Smart Defaults by Trigger
+## Smart Defaults by Run
 
-The role determines which layers to compare based on the trigger — no need to specify:
+The role automatically determines which layers to compare based on the run number:
 
-| Trigger | Layers Compared Automatically |
-|---------|-------------------------------|
-| New Epic/Story created | Contract Baseline → PRD → Module List → Epic/Story ACs |
-| Code development completed | Story ACs → Code (what was actually built) |
-| Client requirement/CR received | New requirement → Full baseline (all layers) |
-| Sprint start | Story ACs → Contract Baseline (verify ACs don't exceed contracted scope) |
-| Ad hoc | Asks one follow-up: which layer to check? |
+| Run | Layers Compared Automatically |
+|-----|-------------------------------|
+| Run 1 — Baseline establishment | Client SOW → PRD → Module List → Agreed hours per role → Milestones |
+| Run 2 — Epics and Stories | Contract Baseline + Module List → Epics → Stories → ACs |
+| Run 3 — Sprints finalised | Story ACs → Contract Baseline (verify ACs don't exceed contracted scope) |
+| Run 4 — Code generation completed | Story ACs → Code (what was actually built) |
+| Run 5 — Milestone delivery | Contract Baseline → Everything delivered in this milestone |
+| Run 6 — Client CR received | New requirement → Full baseline (all layers) |
 
 ---
 

@@ -5,3 +5,6 @@ Thumbs.db
 .env
 .env.local
 node_modules/
+
+# Claude auto-memory (private to local agent, not project artifact)
+memory/

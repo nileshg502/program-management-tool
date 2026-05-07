@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trackwise — Palette Comparison</title>
+<style>
+* , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── DEFAULT (Indigo → Mint) ── */
+:root {
+  --primary:        #4F6BED;
+  --primary-hover:  #3D55D6;
+  --primary-50:     #EEF1FE;
+  --primary-100:    #DCE3FD;
+  --primary-700:    #3D55D6;
+
+  --accent:         #3DD9B0;
+  --accent-50:      #E6FBF5;
+  --accent-100:     #C7F4E5;
+  --grad-start:     #4F6BED;
+  --grad-end:       #3DD9B0;
+  --auth-bg:        linear-gradient(135deg, #4F6BED 0%, #3DD9B0 100%);
+
+  --success:        #22C55E;
+  --success-50:     #ECFDF3;
+  --success-100:    #D1FADF;
+  --warning:        #F59E0B;
+  --warning-50:     #FFFAEB;
+  --warning-100:    #FEF0C7;
+  --danger:         #EF4444;
+  --danger-50:      #FEF3F2;
+  --danger-100:     #FEE4E2;
+  --info:           #3B82F6;
+  --info-50:        #EFF6FF;
+
+  --canvas:         #F7F8FB;
+  --surface:        #FFFFFF;
+  --ink:            #0F1729;
+  --ink-2:          #1F2937;
+  --ink-soft:       #5B6478;
+  --muted:          #8A93A6;
+
+  --gray-100:       #F1F2F6;
+  --gray-200:       #E4E7EE;
+  --gray-300:       #CBD0DB;
+  --gray-400:       #9AA1B2;
+  --gray-500:       #6B7385;
+
+  --sidebar-bg:     linear-gradient(180deg, #0F1729 0%, #131C36 100%);
+  --sidebar-border: #1F2942;
+  --sidebar-text:   #94A0BC;
+  --sidebar-active-bg: rgba(79,107,237,.18);
+  --sidebar-active-line: #4F6BED;
+
+  --shadow-xs: 0 1px 2px rgba(15,23,41,.05);
+  --shadow-sm: 0 2px 4px rgba(79,107,237,.06), 0 1px 2px rgba(15,23,41,.04);
+  --shadow-md: 0 8px 16px -4px rgba(79,107,237,.12), 0 2px 4px rgba(15,23,41,.04);
+  --shadow-lg: 0 16px 32px -8px rgba(79,107,237,.18);
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+}
+
+/* ════ PALETTE 2 — Coral → Plum (Asana-leaning, warm) ════ */
+[data-palette="coral"] {
+  --primary:        #F25E5E;
+  --primary-hover:  #DC4545;
+  --primary-50:     #FEF1F1;
+  --primary-100:    #FDD9D9;
+  --primary-700:    #B83838;
+
+  --accent:         #B855C7;
+  --accent-50:      #FAF0FB;
+  --grad-start:     #F25E5E;
+  --grad-end:       #B855C7;
+  --auth-bg:        linear-gradient(135deg, #F25E5E 0%, #B855C7 70%, #6E45B8 100%);
+
+  --canvas:         #FBF8F7;
+  --surface:        #FFFFFF;
+  --ink:            #2A1F2C;
+  --ink-soft:       #6B5C66;
+
+  --sidebar-bg:     linear-gradient(180deg, #2A1F2C 0%, #3A2434 100%);
+  --sidebar-border: #422937;
+  --sidebar-text:   #B8A4AE;
+  --sidebar-active-bg: rgba(242,94,94,.20);
+  --sidebar-active-line: #F25E5E;
+
+  --shadow-sm: 0 2px 4px rgba(242,94,94,.08), 0 1px 2px rgba(42,31,44,.04);
+  --shadow-md: 0 8px 16px -4px rgba(242,94,94,.14), 0 2px 4px rgba(42,31,44,.04);
+  --shadow-lg: 0 16px 32px -8px rgba(184,85,199,.20);
+}
+
+/* ════ PALETTE 3 — Violet → Pink (Linear aurora) ════ */
+[data-palette="violet"] {
+  --primary:        #7C5CFC;
+  --primary-hover:  #6845E0;
+  --primary-50:     #F4F0FF;
+  --primary-100:    #E5DCFF;
+  --primary-700:    #5832D9;
+
+  --accent:         #EC4899;
+  --accent-50:      #FDF2F8;
+  --grad-start:     #7C5CFC;
+  --grad-end:       #EC4899;
+  --auth-bg:        radial-gradient(ellipse at top left, #7C5CFC 0%, transparent 50%), radial-gradient(ellipse at bottom right, #EC4899 0%, transparent 50%), linear-gradient(135deg, #1A0B3D 0%, #0F0820 100%);
+
+  --canvas:         #FAFAFC;
+  --surface:        #FFFFFF;
+  --ink:            #0F0820;
+  --ink-soft:       #5B5468;
+
+  --sidebar-bg:     linear-gradient(180deg, #0F0820 0%, #1A0B3D 100%);
+  --sidebar-border: #2A1B4D;
+  --sidebar-text:   #A597C5;
+  --sidebar-active-bg: rgba(124,92,252,.22);
+  --sidebar-active-line: #7C5CFC;
+
+  --shadow-sm: 0 2px 4px rgba(124,92,252,.08), 0 1px 2px rgba(15,8,32,.04);
+  --shadow-md: 0 8px 16px -4px rgba(124,92,252,.14), 0 2px 4px rgba(15,8,32,.04);
+  --shadow-lg: 0 16px 32px -8px rgba(236,72,153,.18);
+}
+
+/* ════ PALETTE 4 — Teal-only (Height minimal) ════ */
+[data-palette="teal"] {
+  --primary:        #0D9488;
+  --primary-hover:  #0F766E;
+  --primary-50:     #F0FDFA;
+  --primary-100:    #CCFBF1;
+  --primary-700:    #115E59;
+
+  --accent:         #14B8A6;
+  --accent-50:      #F0FDFA;
+  --grad-start:     #0D9488;
+  --grad-end:       #14B8A6;
+  --auth-bg:        linear-gradient(135deg, #0F766E 0%, #14B8A6 100%);
+
+  --canvas:         #F8FAFA;
+  --surface:        #FFFFFF;
+  --ink:            #0F1F1D;
+  --ink-soft:       #4B5856;
+
+  --sidebar-bg:     linear-gradient(180deg, #0F1F1D 0%, #15302C 100%);
+  --sidebar-border: #1E3633;
+  --sidebar-text:   #93A8A4;
+  --sidebar-active-bg: rgba(13,148,136,.20);
+  --sidebar-active-line: #0D9488;
+
+  --shadow-sm: 0 2px 4px rgba(13,148,136,.06), 0 1px 2px rgba(15,31,29,.04);
+  --shadow-md: 0 8px 16px -4px rgba(13,148,136,.10), 0 2px 4px rgba(15,31,29,.04);
+  --shadow-lg: 0 16px 32px -8px rgba(13,148,136,.15);
+}
+
+/* ════════════════════════════════════════════════════════
+   BACKGROUND COLORWAYS — orthogonal to palette
+   Override only: canvas, surface (cards), ink, neutrals
+   Accent / status colors are untouched, so any palette × any bg works
+════════════════════════════════════════════════════════ */
+
+/* Default ('smoke') is what each palette already defines */
+
+/* Pure white — flat, minimal */
+[data-bg="white"] {
+  --canvas: #FFFFFF;
+  --surface: #FFFFFF;
+  --gray-100: #F9FAFB;
+  --gray-200: #EEF0F4;
+}
+
+/* Warm cream — paper-like, calm */
+[data-bg="cream"] {
+  --canvas: #FAF7F2;
+  --surface: #FFFDF9;
+  --gray-100: #F4EFE7;
+  --gray-200: #E8E0D2;
+  --gray-300: #D6CBB8;
+  --ink-soft: #6B5F4D;
+}
+
+/* Soft mint — fresh */
+[data-bg="mint"] {
+  --canvas: #F2FBF7;
+  --surface: #FFFFFF;
+  --gray-100: #E6F4EE;
+  --gray-200: #D5EAE0;
+}
+
+/* Lavender mist — premium, soft */
+[data-bg="lavender"] {
+  --canvas: #F6F4FB;
+  --surface: #FFFFFF;
+  --gray-100: #ECE7F5;
+  --gray-200: #DDD5EB;
+}
+
+/* Slate — cool & businesslike */
+[data-bg="slate"] {
+  --canvas: #EEF2F6;
+  --surface: #FFFFFF;
+  --gray-100: #E1E7EE;
+  --gray-200: #CCD4DE;
+}
+
+/* Dark mode — chrome surfaces, status colors keep popping */
+[data-bg="dark"] {
+  --canvas: #0B1020;
+  --surface: #131A2E;
+  --ink: #E5E9F2;
+  --ink-2: #C9D1E0;
+  --ink-soft: #8A93A6;
+  --muted: #6B7385;
+  --gray-100: #1B2238;
+  --gray-200: #232C46;
+  --gray-300: #354263;
+  --gray-400: #5A6584;
+  --gray-500: #8A93A6;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,.4);
+  --shadow-md: 0 8px 16px -4px rgba(0,0,0,.5);
+  --shadow-lg: 0 16px 32px -8px rgba(0,0,0,.6);
+}
+/* Dark-mode tweaks for things that assume light */
+[data-bg="dark"] .switcher       { background: rgba(19,26,46,.85); border-bottom-color: var(--gray-200); }
+[data-bg="dark"] .swatch-btn     { background: var(--surface); color: var(--ink); border-color: var(--gray-200); }
+[data-bg="dark"] .approve-hint   { background: var(--gray-100); color: var(--ink-soft); }
+[data-bg="dark"] .icon-btn       { background: var(--surface); border-color: var(--gray-200); color: var(--ink-soft); }
+[data-bg="dark"] .auth-input     { background: var(--gray-100); border-color: var(--gray-200); color: var(--ink); }
+[data-bg="dark"] .auth-preview-card { background: var(--surface); }
+[data-bg="dark"] .palette-info   { background: var(--surface); border-color: var(--gray-200); }
+[data-bg="dark"] .auth-preview-brand { color: var(--ink); }
+[data-bg="dark"] .role-tag       { background: rgba(79,107,237,.15); }
+[data-bg="dark"] .badge-success  { background: rgba(34,197,94,.10); border-color: rgba(34,197,94,.25); }
+[data-bg="dark"] .badge-warning  { background: rgba(245,158,11,.10); border-color: rgba(245,158,11,.25); }
+[data-bg="dark"] .badge-danger   { background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.25); }
+[data-bg="dark"] .badge-primary  { background: rgba(79,107,237,.10); border-color: rgba(79,107,237,.25); }
+[data-bg="dark"] .notif-badge    { border-color: var(--surface); }
+[data-bg="dark"] .avatar         { border-color: var(--surface); }
+
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ════════════ TOP SWITCHER ════════════ */
+.switcher {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--gray-200);
+  padding: var(--sp-3) var(--sp-6);
+}
+.switcher-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.switcher-row + .switcher-row { margin-top: var(--sp-2); padding-top: var(--sp-2); border-top: 1px dashed var(--gray-200); }
+.switcher-row-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-right: var(--sp-2);
+  min-width: 90px;
+}
+.switcher-title {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -.01em;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.switcher-title-mark {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+}
+.swatch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1.5px solid var(--gray-200);
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--ink);
+  transition: all .15s;
+}
+.swatch-btn:hover { border-color: var(--gray-300); transform: translateY(-1px); }
+.swatch-btn.active { border-width: 2px; padding: 6px 11px; box-shadow: 0 0 0 3px rgba(0,0,0,.04); }
+.swatch-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,.08);
+}
+.swatch-dot.indigo { background: linear-gradient(135deg, #4F6BED, #3DD9B0); }
+.swatch-dot.coral  { background: linear-gradient(135deg, #F25E5E, #B855C7); }
+.swatch-dot.violet { background: linear-gradient(135deg, #7C5CFC, #EC4899); }
+.swatch-dot.teal   { background: linear-gradient(135deg, #0D9488, #14B8A6); }
+
+/* Background colorway swatches */
+.swatch-dot.bg-smoke    { background: #F7F8FB; }
+.swatch-dot.bg-white    { background: #FFFFFF; border-color: rgba(0,0,0,.18); }
+.swatch-dot.bg-cream    { background: #FAF7F2; }
+.swatch-dot.bg-mint     { background: #F2FBF7; }
+.swatch-dot.bg-lavender { background: #F6F4FB; }
+.swatch-dot.bg-slate    { background: #EEF2F6; }
+.swatch-dot.bg-dark     { background: #0B1020; border-color: #232C46; }
+
+.swatch-btn[data-swatch="indigo"].active { border-color: #4F6BED; }
+.swatch-btn[data-swatch="coral"].active  { border-color: #F25E5E; }
+.swatch-btn[data-swatch="violet"].active { border-color: #7C5CFC; }
+.swatch-btn[data-swatch="teal"].active   { border-color: #0D9488; }
+.swatch-btn[data-bg].active              { border-color: var(--ink-soft); }
+
+.approve-hint {
+  font-size: 12px;
+  color: var(--ink-soft);
+  padding: 6px 12px;
+  background: var(--gray-100);
+  border-radius: 999px;
+  margin-left: auto;
+}
+
+/* ════════════ APP SHELL ════════════ */
+.shell { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 64px); }
+
+.sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  padding: var(--sp-5) 0;
+  position: relative;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-5) var(--sp-5);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.01em;
+}
+.sidebar-brand-mark {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  box-shadow: 0 4px 12px -2px rgba(0,0,0,.4);
+}
+.sidebar-section { margin-bottom: var(--sp-5); }
+.sidebar-label {
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: 600;
+  padding: 0 var(--sp-5) var(--sp-2);
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 10px var(--sp-5);
+  cursor: pointer;
+  color: var(--sidebar-text);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background .15s, color .15s;
+  border-left: 3px solid transparent;
+}
+.nav-item:hover { background: rgba(255,255,255,.04); color: #fff; }
+.nav-item.active {
+  background: var(--sidebar-active-bg);
+  color: #fff;
+  border-left-color: var(--sidebar-active-line);
+}
+.nav-item svg { width: 16px; height: 16px; opacity: .8; flex-shrink: 0; }
+.nav-item.active svg { opacity: 1; }
+
+/* main */
+.main { padding: var(--sp-6) var(--sp-8); overflow-x: hidden; }
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--sp-5);
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.page-sub { font-size: 13px; color: var(--ink-soft); }
+
+/* sync bar */
+.sync-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: var(--sp-5);
+  box-shadow: var(--shadow-xs);
+}
+.sync-bar-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 4px var(--success-50);
+}
+
+/* KPI tiles */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+.kpi {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.kpi.featured::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
+}
+.kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: var(--sp-2);
+}
+.kpi-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+.kpi-value.success { color: var(--success); }
+.kpi-value.warning { color: var(--warning); }
+.kpi-value.danger  { color: var(--danger); }
+.kpi-foot {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: var(--sp-2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Hero gradient KPI */
+.hero-kpi {
+  background: linear-gradient(135deg, var(--grad-start) 0%, var(--grad-end) 100%);
+  color: #fff;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+.hero-kpi::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(255,255,255,.15) 0%, transparent 70%);
+}
+.hero-kpi .kpi-label { color: rgba(255,255,255,.85); }
+.hero-kpi .kpi-value { color: #fff; }
+.hero-kpi .kpi-foot { color: rgba(255,255,255,.85); }
+.hero-kpi::before { display: none; }
+
+/* Client section header */
+.client-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) 0 var(--sp-3);
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.client-name { color: var(--ink); font-weight: 600; }
+.client-meta { color: var(--muted); font-size: 12px; }
+
+/* Project cards */
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+.proj-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.proj-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gray-200);
+  transition: background .2s;
+}
+.proj-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.proj-card.on-track::before { background: linear-gradient(90deg, var(--success), var(--accent)); }
+.proj-card.at-risk::before  { background: linear-gradient(90deg, var(--warning), #FB923C); }
+.proj-card.behind::before   { background: linear-gradient(90deg, var(--danger), #E11D48); }
+
+.proj-card.on-track:hover { border-color: var(--success-100); }
+.proj-card.at-risk:hover  { border-color: var(--warning-100); }
+.proj-card.behind:hover   { border-color: var(--danger-100); }
+
+.proj-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+.proj-card-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.proj-card-sub   { font-size: 12px; color: var(--ink-soft); }
+
+.proj-rows { margin-top: auto; padding-top: var(--sp-2); border-top: 1px solid var(--gray-100); }
+.proj-row  { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; }
+.proj-row-lbl { color: var(--ink-soft); }
+.proj-row-val { color: var(--ink); font-weight: 500; }
+
+.proj-progress { margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--gray-100); }
+.bar { height: 6px; background: var(--gray-100); border-radius: 999px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 999px; background: var(--primary); }
+.bar-fill.success { background: linear-gradient(90deg, var(--success), var(--accent)); }
+.bar-fill.warning { background: linear-gradient(90deg, var(--warning), #FB923C); }
+.bar-fill.danger  { background: linear-gradient(90deg, var(--danger), #E11D48); }
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.badge-success { background: var(--success-50); color: var(--success); border-color: var(--success-100); }
+.badge-warning { background: var(--warning-50); color: var(--warning); border-color: var(--warning-100); }
+.badge-danger  { background: var(--danger-50); color: var(--danger); border-color: var(--danger-100); }
+.badge-primary { background: var(--primary-50); color: var(--primary-700); border-color: var(--primary-100); }
+
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-dot.green  { background: var(--success); box-shadow: 0 0 0 3px var(--success-50); }
+.status-dot.amber  { background: var(--warning); box-shadow: 0 0 0 3px var(--warning-50); }
+.status-dot.red    { background: var(--danger);  box-shadow: 0 0 0 3px var(--danger-50); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .15s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+  color: #fff;
+  box-shadow: 0 4px 12px -2px rgba(0,0,0,.15);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -2px rgba(0,0,0,.2); }
+.btn-default {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--gray-200);
+}
+.btn-default:hover { border-color: var(--primary); color: var(--primary); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn svg { width: 14px; height: 14px; }
+
+/* topbar mini */
+.topbar-actions { display: flex; align-items: center; gap: var(--sp-2); }
+.icon-btn {
+  width: 36px; height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  color: var(--ink-soft);
+  position: relative;
+}
+.notif-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0 5px;
+  min-width: 16px; height: 16px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+.role-tag {
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+/* Auth preview card */
+.auth-preview {
+  margin-top: var(--sp-6);
+  background: var(--auth-bg);
+  border-radius: var(--r-xl);
+  padding: var(--sp-8);
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--sp-6);
+  align-items: center;
+  min-height: 280px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+.auth-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(255,255,255,.2) 0%, transparent 50%);
+}
+.auth-preview-text { color: #fff; position: relative; }
+.auth-preview-text h3 { font-size: 24px; font-weight: 700; margin-bottom: var(--sp-2); letter-spacing: -.01em; }
+.auth-preview-text p { font-size: 14px; opacity: .9; max-width: 360px; }
+.auth-preview-card {
+  background: #fff;
+  border-radius: var(--r-lg);
+  padding: var(--sp-6);
+  box-shadow: 0 20px 50px -10px rgba(0,0,0,.3);
+  position: relative;
+}
+.auth-preview-brand {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; color: var(--ink); margin-bottom: var(--sp-4);
+}
+.auth-preview-brand-mark {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 12px;
+}
+.auth-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-family: inherit;
+  margin-bottom: var(--sp-3);
+  background: #fff;
+  color: var(--ink);
+}
+.auth-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--r-md);
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+  color: #fff;
+}
+
+/* Palette intro card */
+.palette-info {
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-5);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-4);
+  align-items: center;
+}
+.palette-info h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: -.01em;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.palette-info p { font-size: 13px; color: var(--ink-soft); }
+.palette-chips {
+  display: flex;
+  gap: var(--sp-2);
+}
+.palette-chip {
+  width: 36px; height: 36px;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-xs);
+  border: 1px solid rgba(0,0,0,.06);
+}
+
+/* Action row */
+.actions-row { display: flex; gap: var(--sp-2); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol>
+    <symbol id="i-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+    <symbol id="i-trend-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  </defs>
+</svg>
+
+<!-- Switcher -->
+<div class="switcher">
+  <!-- Row 1: brand title + palettes -->
+  <div class="switcher-row">
+    <div class="switcher-title">
+      <div class="switcher-title-mark">T</div>
+      Trackwise — Palette Comparison
+    </div>
+    <span class="switcher-row-label">Palette</span>
+    <button class="swatch-btn active" data-swatch="indigo" onclick="setPalette('indigo', this)">
+      <span class="swatch-dot indigo"></span> Indigo → Mint
+    </button>
+    <button class="swatch-btn" data-swatch="coral" onclick="setPalette('coral', this)">
+      <span class="swatch-dot coral"></span> Coral → Plum
+    </button>
+    <button class="swatch-btn" data-swatch="violet" onclick="setPalette('violet', this)">
+      <span class="swatch-dot violet"></span> Violet → Pink
+    </button>
+    <button class="swatch-btn" data-swatch="teal" onclick="setPalette('teal', this)">
+      <span class="swatch-dot teal"></span> Teal-only
+    </button>
+  </div>
+  <!-- Row 2: backgrounds -->
+  <div class="switcher-row">
+    <span class="switcher-row-label">Background</span>
+    <button class="swatch-btn active" data-bg="smoke" onclick="setBackground('smoke', this)">
+      <span class="swatch-dot bg-smoke"></span> Smoke white
+    </button>
+    <button class="swatch-btn" data-bg="white" onclick="setBackground('white', this)">
+      <span class="swatch-dot bg-white"></span> Pure white
+    </button>
+    <button class="swatch-btn" data-bg="cream" onclick="setBackground('cream', this)">
+      <span class="swatch-dot bg-cream"></span> Warm cream
+    </button>
+    <button class="swatch-btn" data-bg="mint" onclick="setBackground('mint', this)">
+      <span class="swatch-dot bg-mint"></span> Soft mint
+    </button>
+    <button class="swatch-btn" data-bg="lavender" onclick="setBackground('lavender', this)">
+      <span class="swatch-dot bg-lavender"></span> Lavender mist
+    </button>
+    <button class="swatch-btn" data-bg="slate" onclick="setBackground('slate', this)">
+      <span class="swatch-dot bg-slate"></span> Slate
+    </button>
+    <button class="swatch-btn" data-bg="dark" onclick="setBackground('dark', this)">
+      <span class="swatch-dot bg-dark"></span> Dark mode
+    </button>
+    <span class="approve-hint">4 palettes × 7 backgrounds = 28 combinations</span>
+  </div>
+</div>
+
+<!-- App preview -->
+<div class="shell" id="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-mark"><svg width="16" height="16"><use href="#i-cube"/></svg></div>
+      Trackwise
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <div class="nav-item active"><svg><use href="#i-dashboard"/></svg> Portfolio Dashboard</div>
+      <div class="nav-item"><svg><use href="#i-calendar"/></svg> Availability &amp; Bench</div>
+      <div class="nav-item"><svg><use href="#i-users"/></svg> People Directory</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Admin</div>
+      <div class="nav-item"><svg><use href="#i-key"/></svg> User Management</div>
+      <div class="nav-item"><svg><use href="#i-building"/></svg> Client Management</div>
+      <div class="nav-item"><svg><use href="#i-settings"/></svg> Project Settings</div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- Palette intro -->
+    <div class="palette-info" id="palette-info">
+      <div>
+        <h2 id="palette-name">Indigo → Mint</h2>
+        <p id="palette-desc">Trustworthy, fresh, B2B-credible. Linear's discipline + monday.com's optimism. Best for executive dashboards that need to feel modern without screaming for attention.</p>
+      </div>
+      <div class="palette-chips" id="palette-chips"></div>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Portfolio Dashboard</div>
+        <div class="page-sub">All clients and active projects across the organization</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-default btn-sm"><svg><use href="#i-refresh"/></svg> Sync all</button>
+        <div class="icon-btn"><svg width="18" height="18"><use href="#i-bell"/></svg><span class="notif-badge">4</span></div>
+        <span class="role-tag">CTO / CEO</span>
+        <div class="avatar">SK</div>
+      </div>
+    </div>
+
+    <!-- Sync bar -->
+    <div class="sync-bar">
+      <span class="sync-bar-dot"></span>
+      <strong style="color:var(--ink)">All projects in sync</strong>
+      <span>· Last synced 3 minutes ago · Next sync in 12 minutes</span>
+    </div>
+
+    <!-- KPI row (1 hero + 3 standard) -->
+    <div class="kpi-grid">
+      <div class="kpi hero-kpi">
+        <div class="kpi-label">Active projects</div>
+        <div class="kpi-value">7</div>
+        <div class="kpi-foot"><svg width="12" height="12"><use href="#i-trend-up"/></svg> +1 this quarter</div>
+      </div>
+      <div class="kpi featured">
+        <div class="kpi-label">On track</div>
+        <div class="kpi-value success">4</div>
+        <div class="kpi-foot">57% of portfolio</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">At risk</div>
+        <div class="kpi-value warning">2</div>
+        <div class="kpi-foot">Needs attention this week</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Behind schedule</div>
+        <div class="kpi-value danger">1</div>
+        <div class="kpi-foot">Slipped 2 sprints</div>
+      </div>
+    </div>
+
+    <!-- Client groups -->
+    <div class="client-head">
+      <svg width="16" height="16"><use href="#i-building"/></svg>
+      <span class="client-name">Acme Corp</span>
+      <span class="client-meta">· FinTech · 2 projects</span>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card on-track">
+        <div class="proj-card-head">
+          <div>
+            <div class="proj-card-title">Customer Portal Revamp</div>
+            <div class="proj-card-sub">Fixed Scope · PM: Nilesh Gupta · 5 team</div>
+          </div>
+          <span class="badge badge-success"><span class="status-dot green"></span>On Track</span>
+        </div>
+        <div class="proj-rows">
+          <div class="proj-row"><span class="proj-row-lbl">Velocity (last 3)</span><span class="proj-row-val">42 pts</span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Open CRs / Pending</span><span class="proj-row-val">3 · <span style="color:var(--warning)">38h</span></span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Last sync</span><span class="proj-row-val">3 min ago</span></div>
+        </div>
+        <div class="proj-progress">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px"><span style="color:var(--ink-soft)">Sprint 7 of 12</span><span style="font-weight:600">58%</span></div>
+          <div class="bar"><div class="bar-fill success" style="width:58%"></div></div>
+        </div>
+      </div>
+      <div class="proj-card at-risk">
+        <div class="proj-card-head">
+          <div>
+            <div class="proj-card-title">Mobile App v2</div>
+            <div class="proj-card-sub">Fixed Budget · PM: Anjali Patil · 4 team</div>
+          </div>
+          <span class="badge badge-warning"><span class="status-dot amber"></span>At Risk</span>
+        </div>
+        <div class="proj-rows">
+          <div class="proj-row"><span class="proj-row-lbl">Velocity (last 3)</span><span class="proj-row-val">28 pts</span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Open CRs / Pending</span><span class="proj-row-val">5 · <span style="color:var(--warning)">62h</span></span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Last sync</span><span class="proj-row-val">8 min ago</span></div>
+        </div>
+        <div class="proj-progress">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px"><span style="color:var(--ink-soft)">Sprint 3 of 8</span><span style="font-weight:600;color:var(--warning)">38%</span></div>
+          <div class="bar"><div class="bar-fill warning" style="width:38%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="client-head">
+      <svg width="16" height="16"><use href="#i-building"/></svg>
+      <span class="client-name">BrightHealth</span>
+      <span class="client-meta">· HealthCare · 2 projects</span>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card on-track">
+        <div class="proj-card-head">
+          <div>
+            <div class="proj-card-title">EHR Integration Platform</div>
+            <div class="proj-card-sub">Fixed Scope · PM: Rajiv Malhotra · 6 team</div>
+          </div>
+          <span class="badge badge-success"><span class="status-dot green"></span>On Track</span>
+        </div>
+        <div class="proj-rows">
+          <div class="proj-row"><span class="proj-row-lbl">Velocity (last 3)</span><span class="proj-row-val">36 pts</span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Open CRs / Pending</span><span class="proj-row-val">2 · 14h</span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Last sync</span><span class="proj-row-val">2 min ago</span></div>
+        </div>
+        <div class="proj-progress">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px"><span style="color:var(--ink-soft)">Sprint 5 of 10</span><span style="font-weight:600">50%</span></div>
+          <div class="bar"><div class="bar-fill success" style="width:50%"></div></div>
+        </div>
+      </div>
+      <div class="proj-card behind">
+        <div class="proj-card-head">
+          <div>
+            <div class="proj-card-title">Analytics Dashboard</div>
+            <div class="proj-card-sub">Fixed Budget · PM: Nilesh Gupta · 3 team</div>
+          </div>
+          <span class="badge badge-danger"><span class="status-dot red"></span>Behind</span>
+        </div>
+        <div class="proj-rows">
+          <div class="proj-row"><span class="proj-row-lbl">Velocity (last 3)</span><span class="proj-row-val">19 pts</span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Open CRs / Pending</span><span class="proj-row-val">7 · <span style="color:var(--danger)">94h</span></span></div>
+          <div class="proj-row"><span class="proj-row-lbl">Last sync</span><span class="proj-row-val">12 min ago</span></div>
+        </div>
+        <div class="proj-progress">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px"><span style="color:var(--ink-soft)">Sprint 2 of 6</span><span style="font-weight:600;color:var(--danger)">28%</span></div>
+          <div class="bar"><div class="bar-fill danger" style="width:28%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auth preview -->
+    <div class="auth-preview">
+      <div class="auth-preview-text">
+        <h3>Login screen preview</h3>
+        <p>This is what the auth-screen background looks like with the selected palette. The gradient drives the brand mark, primary buttons, KPI accent lines, and active-project glow.</p>
+        <div class="actions-row" style="margin-top:var(--sp-4)">
+          <button class="btn" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)">View full mockup</button>
+          <button class="btn" style="background:#fff;color:var(--ink)">Approve this palette</button>
+        </div>
+      </div>
+      <div class="auth-preview-card">
+        <div class="auth-preview-brand">
+          <div class="auth-preview-brand-mark"><svg width="14" height="14"><use href="#i-cube"/></svg></div>
+          Trackwise
+        </div>
+        <div style="font-size:16px;font-weight:600;margin-bottom:var(--sp-4);color:var(--ink)">Sign in</div>
+        <input class="auth-input" placeholder="Email address" value="cto@acmecorp.com" />
+        <input class="auth-input" type="password" placeholder="Password" value="••••••••" />
+        <button class="auth-btn">Sign in</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const PALETTES = {
+  'indigo': {
+    name: 'Indigo → Mint',
+    desc: 'Trustworthy, fresh, B2B-credible. Linear\'s discipline + monday.com\'s optimism. Best for executive dashboards that need to feel modern without screaming for attention.',
+    chips: ['#4F6BED', '#3DD9B0', '#22C55E', '#F59E0B', '#EF4444', '#0F1729'],
+  },
+  'coral': {
+    name: 'Coral → Plum',
+    desc: 'Warm, approachable, optimistic. Asana-leaning. Best when you want the tool to feel friendly and human — gives PMs a more upbeat tone in a stressful job.',
+    chips: ['#F25E5E', '#B855C7', '#22C55E', '#F59E0B', '#EF4444', '#2A1F2C'],
+  },
+  'violet': {
+    name: 'Violet → Pink',
+    desc: 'Bold aurora gradient — Linear-style. Highest visual impact. Best for design-conscious teams; risk is it can look more "consumer SaaS" than "executive tool."',
+    chips: ['#7C5CFC', '#EC4899', '#22C55E', '#F59E0B', '#EF4444', '#0F0820'],
+  },
+  'teal': {
+    name: 'Teal-only',
+    desc: 'Calm, focused, no rainbow. Height/Notion-leaning. Best when you want the chrome to disappear and project status colors to do all the talking.',
+    chips: ['#0D9488', '#14B8A6', '#22C55E', '#F59E0B', '#EF4444', '#0F1F1D'],
+  },
+};
+
+function setPalette(key, btn) {
+  if (key === 'indigo') document.body.removeAttribute('data-palette');
+  else                  document.body.setAttribute('data-palette', key);
+  // Only clear active on palette-row buttons (those with data-swatch)
+  document.querySelectorAll('.swatch-btn[data-swatch]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const p = PALETTES[key];
+  document.getElementById('palette-name').textContent = p.name;
+  document.getElementById('palette-desc').textContent = p.desc;
+  const chipsEl = document.getElementById('palette-chips');
+  chipsEl.innerHTML = p.chips.map(c => `<div class="palette-chip" style="background:${c}" title="${c}"></div>`).join('');
+}
+
+function setBackground(key, btn) {
+  if (key === 'smoke') document.body.removeAttribute('data-bg');
+  else                 document.body.setAttribute('data-bg', key);
+  document.querySelectorAll('.swatch-btn[data-bg]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Init chips
+setPalette('indigo', document.querySelector('.swatch-btn[data-swatch="indigo"]'));
+</script>
+</body>
+</html>

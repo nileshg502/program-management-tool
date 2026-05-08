@@ -1,9 +1,9 @@
 # Product Backlog
 
-**Last Updated:** 2026-05-05
-**Total Points:** 209
-**Total Stories:** 49
-**Total Epics:** 8
+**Last Updated:** 2026-05-08
+**Total Points:** 255
+**Total Stories:** 60
+**Total Epics:** 9
 
 ---
 
@@ -11,14 +11,15 @@
 
 | Epic | Title | Stories | Points | Priority |
 |------|-------|---------|--------|----------|
-| EP-01 | Foundation & Authentication | 5 | 23 | P0 |
+| EP-01 | Foundation & Authentication | 10 | 39 | P0 |
 | EP-02 | People Directory | 5 | 23 | P1 |
-| EP-03 | Client & Project Dashboard | 6 | 22 | P1 |
+| EP-03 | Client & Project Dashboard | 9 | 33 | P1 |
 | EP-04 | Project Detail View | 6 | 27 | P1 |
 | EP-05 | Team Assignment & Availability | 6 | 24 | P2 |
 | EP-06 | Forensic Summary Integration | 5 | 16 | P2 |
 | EP-07 | Alerts & Notifications | 8 | 32 | P2 |
 | EP-08 | GitHub Integration | 8 | 42 | P1 |
+| EP-09 | Project Health Dashboard | 3 | 19 | P1 |
 
 ---
 
@@ -33,8 +34,9 @@
 | ST-003 | User registration and login | EP-01 | 5 | Not Started | ST-001 |
 | ST-004 | Implement RBAC — CTO/CEO and PM roles | EP-01 | 5 | Not Started | ST-003 |
 | ST-005 | Route and API permission guards by role | EP-01 | 5 | Not Started | ST-004 |
+| ST-050 | Create user flow — direct Cognito creation by Manager | EP-01 | 5 | Not Started | ST-003, ST-004 |
 
-**EP-01 Total: 23 points**
+**EP-01 Total: 28 points (P0)**
 
 ---
 
@@ -53,6 +55,8 @@
 | ST-014 | Status roll-up logic — worst status across projects per client | EP-03 | 5 | Not Started | ST-013, ST-019 |
 | ST-015 | Colour-coded status badges — Green / Amber / Red | EP-03 | 2 | Not Started | — |
 | ST-016 | Navigate from project row to Project Detail view | EP-03 | 2 | Not Started | ST-013 |
+| ST-055 | Manage Client — edit client details | EP-03 | 3 | Not Started | ST-011 |
+| ST-056 | Manage Client — archive client | EP-03 | 3 | Not Started | ST-011, ST-012 |
 | ST-017 | Project overview section — static fields display | EP-04 | 3 | Not Started | ST-012 |
 | ST-018 | Milestone health section — list with status per milestone | EP-04 | 5 | Not Started | ST-044 |
 | ST-019 | Milestone status calculation — On Track / At Risk / Behind | EP-04 | 8 | Not Started | ST-044 |
@@ -67,8 +71,11 @@
 | ST-047 | Scheduled auto-sync every 15 minutes | EP-08 | 5 | Not Started | ST-044, ST-045 |
 | ST-048 | Manual refresh trigger per project | EP-08 | 3 | Not Started | ST-047 |
 | ST-049 | Sync failure warning displayed on project | EP-08 | 3 | Not Started | ST-047 |
+| ST-058 | CR Summary — add origin classification and source deviation link | EP-09 | 3 | Not Started | ST-029, ST-030 |
+| ST-059 | Project Health read model and `GET /projects/{id}/health` API | EP-09 | 8 | Not Started | ST-019, ST-020, ST-058 |
+| ST-060 | Project Health UI — single-page cockpit screen | EP-09 | 8 | Not Started | ST-059 |
 
-**EP-02 Total: 23 points | EP-03 Total: 22 points | EP-04 Total: 27 points | EP-08 Total: 42 points**
+**EP-02 Total: 23 points | EP-03 Total: 28 points (P1) | EP-04 Total: 27 points | EP-08 Total: 42 points (P1) | EP-09 Total: 19 points (P1)**
 
 ---
 
@@ -95,8 +102,13 @@
 | ST-039 | Alert trigger — team domain knowledge mismatch on project | EP-07 | 3 | Not Started | ST-034, ST-025 |
 | ST-040 | In-app notification panel with unread count badge | EP-07 | 5 | Not Started | ST-034 |
 | ST-041 | Alert history view per project | EP-07 | 3 | Not Started | ST-034 |
+| ST-051 | Manage User — reset password (admin-initiated) | EP-01 | 3 | Not Started | ST-050 |
+| ST-052 | Manage User — change user role | EP-01 | 2 | Not Started | ST-050 |
+| ST-053 | Manage User — disable and re-enable user | EP-01 | 3 | Not Started | ST-050 |
+| ST-054 | Manage User — delete user (hard delete) | EP-01 | 3 | Not Started | ST-050 |
+| ST-057 | Manage Client — delete client (cascade hard delete) | EP-03 | 5 | Not Started | ST-056 |
 
-**EP-05 Total: 24 points | EP-06 Total: 16 points | EP-07 Total: 32 points**
+**EP-01 Total: 11 points (P2) | EP-03 Total: 5 points (P2) | EP-05 Total: 24 points | EP-06 Total: 16 points | EP-07 Total: 32 points**
 
 ---
 
@@ -106,4 +118,17 @@
 - ST-019 and ST-020 are blocked on PRD Open Questions #1 and #2 (sprint label convention, At Risk threshold) — these questions must be resolved before these stories enter a sprint
 - ST-026 is blocked on PRD Open Question #3 (Partially Available definition)
 - ST-042 (GitHub auth) is the gate for all EP-08 stories — schedule it early in the P1 sprint sequence
+- ST-050 supersedes ST-003's "registration" path — when ST-050 is scheduled, re-scope ST-003 to "login + logout only" so the two stories don't overlap
+- ST-051, ST-053, ST-054 — PM approved on 2026-05-07 to bring reset-password, disable/re-enable, and delete in-app for v1.0. ADR-003 must be amended to match (Architect action). Stories are unblocked for sprint planning; the ADR amendment is a documentation follow-up, not a gate
+- ST-055 makes ST-011's "deactivate" action redundant — re-scope ST-011 when ST-055 is scheduled so deactivate is replaced by archive (ST-056) semantics
+- **GitHub file reading rejected by PM on 2026-05-07.** Trackwise reads only milestones, sprint labels, and blocked labels from GitHub (per ADR-004). All forensic, compliance, and security data is stored in Trackwise's own database and exposed via Trackwise APIs. Consequences:
+  - ADR-004 stays as-is — no reopen needed
+  - ADR-007 must be updated by Architect — current ADR-007 says CR data is parsed from `cr-tracker.md` in the repo; new direction is "CR data lives in Trackwise database, no markdown source"
+  - Mockup multi-file tracker + File Preview modal must be removed by UX in the next mockup pass
+  - ST-058–ST-061 (the four File Preview stories drafted earlier this session) have been deleted from the backlog
+  - ST-029 (CR Summary entity) and ST-030 (manual CR entry by PM) become *the* path for CR data, not a fallback
 - Stories >13 points must be split — all stories in this backlog are ≤13 points
+- **EP-09 (Project Health Dashboard) added 2026-05-08 by PM.** Single-view cockpit per project covering sprint, milestone, QA, CR-by-origin, and deviation data. ST-058 adds CR origin classification (data); ST-059 adds the read API; ST-060 adds the UI. ST-059 is gated on PRD Open Questions #1 and #2 (sprint label convention, At Risk threshold) — must be resolved before ST-059 enters a sprint
+- **Data ownership rule confirmed by PM on 2026-05-08.** All Trackwise UI data must be stored in the Trackwise database. Frontend reads only Trackwise APIs — never GitHub or other external systems directly. Backend may call GitHub server-side with a 60-second TTL cache for milestone metadata and sprint membership only. No scheduled sync, no mirror table, no "last synced" UX, no manual refresh button for v1.0. ADR-008 (drafted, awaiting Architect review) codifies this; ADR-007 will be marked Superseded
+- **PRD Open Questions #1 and #2 resolved by PM on 2026-05-08.** Q1 — sprint label pattern is `sprint-N` (numeric suffix); `sprint_label_pattern` field on Project defaults to `sprint-N` per ST-045; current sprint is derived, no `current_sprint_number` field needed. Q2 — At Risk / Behind status computed at read time using burn-rate; bands are 10% / 25% on issue-count basis; full rules in PRD §12.2. ST-019, ST-020, ST-045, ST-059 are unblocked
+- **EP-09 Deviation and QA dependencies parked by PM on 2026-05-08.** EP-09's dashboard reads QA Reports and Deviations, neither of which has a backlog entity yet. PM has parked the schema decision — either PM will define the structure, or PM will provide an existing DB and we build against it. Until resolved, ST-059 stubs the affected sections (returns `data_available: false` with reason `"awaiting schema"`). ST-058's `source_deviation_id` is a soft reference for v1.0 — strict foreign-key validation deferred until the Deviation entity ships

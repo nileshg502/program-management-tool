@@ -1,7 +1,7 @@
 # ADR-002 — Database and Data Layer
 
-**Date:** 2026-05-05
-**Status:** Approved
+**Date:** 2026-05-05 (amended 2026-05-08)
+**Status:** Approved (with amendments — see "Amendment 2026-05-08")
 **Decider:** Architect + PM
 
 ---
@@ -114,3 +114,80 @@ Revisit this ADR when:
 - Organisation count exceeds 20 — evaluate per-tenant database isolation
 - Atlas M0 storage approaches 400MB — upgrade to M10 and enable Performance Advisor
 - A new query pattern emerges that does not fit existing indexes
+
+---
+
+## Amendment 2026-05-08 — EP-09, ADR-008, ADR-003 amendment alignment
+
+This ADR established the v1.0 collection list and indexing strategy. Subsequent decisions (PM Sessions 7 + 8) require schema adjustments. This amendment captures them. Detailed schemas for new and amended entities live in [ADR-009](ADR-009-data-model-core-entities.md), [ADR-010](ADR-010-data-model-project-operations.md), and [ADR-011](ADR-011-github-mirror-cache.md). This amendment is the index.
+
+### Schema deletions (from ADR-008 / ADR-007 supersession)
+
+Remove from `projects`:
+- `cr_tracker_path` — no longer parsed; CR data is CRUD-owned
+
+Remove from `cr_summaries`:
+- `sync_status` — no sync to status
+- `last_synced_at` — no sync to time
+
+Remove from `projects` (per ADR-004 amendment):
+- `last_synced_at` — replaced by per-cache TTL
+- `last_sync_status` — no scheduled sync to track
+
+### Schema renames
+
+On `projects`:
+- `github_sprint_label_prefix` → `sprint_label_pattern` — defaults to `sprint-N` (PRD §12.1)
+
+### Schema additions to existing collections
+
+`projects` gains:
+- `current_sprint_number` — derived (highest sprint label `N` with open work items); not stored. The PRD originally implied storage; ST-045 derives it. No field needed.
+- `archived_at` — nullable timestamp (ST-056 archive)
+- `created_by_user_id`, `created_at`, `updated_at` — audit fields
+- `org_id` (already present per ADR-002) — unchanged
+
+`cr_summaries` gains (per ST-058):
+- `origin` — enum: `deviation` / `client_request` / `internal` / `regulatory`
+- `source_deviation_id` — nullable string; **soft reference** for v1.0 (Deviation entity parked); FK validation deferred until ADR-013
+
+`organisations` gains (per ADR-008 — sync interval is no longer relevant):
+- `github_sync_interval_minutes` — **removed.** No scheduled sync; cache TTL is fixed at 60s and not configurable per org.
+
+### New collections (registered here, detailed elsewhere)
+
+| Collection | Defined in | Purpose |
+|------------|------------|---------|
+| `users` | ADR-009 | Application users — Cognito-linked records |
+| `audit_logs` | ADR-009 | Admin actions on users (per ADR-003 amendment) and other audited events |
+| `cr_records` | ADR-010 | Individual CR records (the per-row data behind `cr_summaries`) — supports ST-058 origin and ST-030 entry |
+| `sprint_annotations` | ADR-010 | PM-set sprint health overrides and notes — Trackwise-owned writes layered on top of GitHub-derived sprint state |
+| `github_cache_milestones` | ADR-011 | 60s-TTL cache of GitHub milestones per project |
+| `github_cache_sprint_membership` | ADR-011 | 60s-TTL cache of GitHub sprint-label issue membership per project |
+
+### Parked (not in v1.0 schema)
+
+| Entity | Owning ADR | Status |
+|--------|-----------|--------|
+| `qa_reports` | ADR-013 (future) | PM-parked — schema not defined |
+| `deviations` | ADR-013 (future) | PM-parked — schema not defined |
+
+### Index additions
+
+| Collection | New Index | Reason |
+|------------|-----------|--------|
+| `users` | `org_id + email` (unique) | Same-org duplicate email prevention (ST-050) |
+| `users` | `cognito_sub` (unique) | Lookup on JWT verification |
+| `audit_logs` | `org_id + target_user_id + timestamp` | Audit trail per user |
+| `cr_records` | `org_id + project_id + origin` | Dashboard CR-by-origin counts (EP-09) |
+| `cr_records` | `org_id + project_id + decision` | CR-by-decision counts |
+| `sprint_annotations` | `org_id + project_id + sprint_number` (unique) | One annotation per sprint per project |
+| `github_cache_milestones` | `org_id + project_id` (unique) + TTL on `expires_at` | One cache row per project; auto-purge expired |
+| `github_cache_sprint_membership` | `org_id + project_id + sprint_label` (unique) + TTL on `expires_at` | One row per project per sprint label; auto-purge expired |
+
+### Consequences (additions)
+
+- The amended `cr_summaries` semantics change: it remains a pre-aggregated read model, but its source of truth is now `cr_records` (CRUD-owned per ADR-008), not `cr-tracker.md`. The aggregate is recomputed on every CR record write.
+- `audit_logs` is required for ADR-003 amendment compliance — no admin user action ships without an audit write.
+- `github_cache_*` collections require MongoDB TTL indexes (`expires_at` field with `expireAfterSeconds: 0`); MongoDB Atlas supports TTL natively.
+- `cr_summaries` may eventually be replaced by an aggregation pipeline once write volume and latency constraints are measured; for v1.0 the pre-aggregated document remains.

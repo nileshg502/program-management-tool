@@ -1,8 +1,10 @@
 # ADR-007 — Forensic Data Source
 
 **Date:** 2026-05-06
-**Status:** Approved
+**Status:** Superseded by [ADR-008](ADR-008-data-ownership-and-sync.md) on 2026-05-08
 **Decider:** Architect + PM
+
+> **⚠ Superseded.** PM rejected the `cr-tracker.md` file-parsing approach in Session 7 (2026-05-07). CR data is now CRUD-owned in the Trackwise database, written and edited via UI/API. See ADR-008 for the data ownership rule. The `cr_tracker_path` field on `projects`, the `sync_status` and `last_synced_at` fields on `cr_summaries`, and the parsing path described in this ADR are no longer implemented. Retained as a historical record.
 
 ---
 

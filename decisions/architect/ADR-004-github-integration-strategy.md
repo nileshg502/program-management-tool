@@ -146,3 +146,17 @@ Revisit this ADR when:
 - GitHub rate limits are approached
 - Monorepo support is requested
 - OAuth token management becomes a support burden
+
+---
+
+## Amendment 2026-05-08 — Sync model narrowed by ADR-008
+
+This ADR's original scheduled-sync model (EventBridge → sync Lambda → mirror tables every 15 min) is **superseded for the dashboard read path** by [ADR-008](ADR-008-data-ownership-and-sync.md):
+
+- The dashboard's GitHub-mirrored fields (milestones + sprint membership) are served via **server-side, on-demand cache** with 60-second TTL — not via scheduled mirror tables
+- File reading is **rejected** (PM Session 7) — the "deferred to future enhancement" line on file contents is now a hard "out of scope," not "deferred"
+- The `projects` schema fields originally proposed by this ADR (`last_synced_at`, `last_sync_status`) are dropped — there is no scheduled sync to track
+- Encrypted OAuth token storage on `projects` (`github_oauth_token`) **is retained** — backend cache calls still authenticate to GitHub using this token
+- `github_sprint_label_prefix` **is retained** but renamed to `sprint_label_pattern` per PRD §12.1, defaulting to `sprint-N`
+
+**No further changes to this ADR's intent are required.** The OAuth strategy, repo mapping, and "what we read from GitHub" tables remain authoritative. The mechanism (cache vs mirror) is in ADR-011.

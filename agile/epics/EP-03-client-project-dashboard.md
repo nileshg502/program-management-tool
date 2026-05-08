@@ -43,5 +43,8 @@ Give CTO/CEO a single top-level screen showing all clients, their active project
 | ST-014 | Status roll-up logic — worst status across projects per client | 5 |
 | ST-015 | Colour-coded status badges — Green / Amber / Red | 2 |
 | ST-016 | Navigate from project row to Project Detail view | 2 |
+| ST-055 | Manage Client — edit client details | 3 |
+| ST-056 | Manage Client — archive client | 3 |
+| ST-057 | Manage Client — delete client (cascade hard delete) | 5 |
 
-**Total Points:** 22
+**Total Points:** 33

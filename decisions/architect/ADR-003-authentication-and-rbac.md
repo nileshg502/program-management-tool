@@ -43,7 +43,21 @@ Employees have no login. PM creates and maintains all employee records including
 - Trackwise calls Cognito `adminCreateUser` API with the provided password — no invite email sent
 - User is immediately active — no first-login flow or temporary password
 - User can change their own password after logging in via in-app settings
-- Account deletion and password reset by admin handled via Cognito console for v1.0
+
+### Admin User Management — In-App (Amendment 2026-05-08)
+PM approved on 2026-05-07 to bring admin-side user management actions in-app for v1.0. The original "Cognito console only" line is superseded by:
+
+| Action | v1.0 Location | Backing API |
+|--------|---------------|-------------|
+| Create user (covered above) | In-app — Manage Users screen | Cognito `adminCreateUser` |
+| **Reset password (admin-initiated)** | In-app — User row action (ST-051) | Cognito `adminSetUserPassword` |
+| **Change role** | In-app — User row action (ST-052) | Mongo update on `users.role` (Cognito carries no role attribute) |
+| **Disable / re-enable user** | In-app — User row action (ST-053) | Cognito `adminDisableUser` / `adminEnableUser` |
+| **Delete user (hard delete)** | In-app — User row action (ST-054) | Cognito `adminDeleteUser` + Mongo delete on `users` document |
+
+All actions require Manager role and are scoped to the same `org_id`. Cross-org user management is not permitted.
+
+**Audit:** every admin action above writes an entry to the `audit_logs` collection (defined in ADR-009) with `actor_user_id`, `target_user_id`, `action`, `timestamp`, and any state changes.
 
 ### Multi-Tenancy — User to Org Binding
 - Each Cognito user has a custom attribute: `custom:org_id`
@@ -113,6 +127,7 @@ The PRD RBAC table distinguished CTO/CEO from PM but the PM confirmed permission
 - Cognito User Pool must be provisioned with `custom:org_id` attribute before any user is created.
 - Frontend must implement Cognito Hosted UI or a custom login page using AWS Amplify SDK.
 - Refresh token logic must be handled on the frontend — Amplify SDK manages this automatically.
+- **Amendment 2026-05-08:** Backend must implement admin-only endpoints for user reset-password / change-role / disable / delete. Each endpoint enforces same-org rule against the JWT `org_id` and writes to `audit_logs`.
 
 ---
 

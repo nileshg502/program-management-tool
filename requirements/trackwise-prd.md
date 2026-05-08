@@ -292,11 +292,43 @@ Automatic alerts sent to the relevant user when a threshold is crossed.
 
 ## 12. Open Questions
 
-| # | Question | Owner | Status |
-|---|----------|-------|--------|
-| 1 | Which GitHub label convention is used for sprints? | PM | Open |
-| 2 | What is the exact threshold for At Risk vs Behind? | CTO | Open |
-| 3 | How is Partially Available defined — hours or PM flag? | PM | Open |
+| # | Question | Owner | Status | Resolution |
+|---|----------|-------|--------|------------|
+| 1 | Which GitHub label convention is used for sprints? | PM | **Resolved 2026-05-08** | See §12.1 |
+| 2 | What is the exact threshold for At Risk vs Behind? | PM | **Resolved 2026-05-08** | See §12.2 |
+| 3 | How is Partially Available defined — hours or PM flag? | PM | Open | — |
+
+### 12.1 Sprint label convention (resolves Q1)
+
+- **Pattern:** `sprint-N` where `N` is a positive integer (e.g. `sprint-1`, `sprint-2`, `sprint-23`)
+- **Storage:** `sprint_label_pattern` field on the Project entity (already specified in ST-045) defaults to `sprint-N`. PM may override per project if a team uses a different pattern, but the default covers all teams that follow the standard convention.
+- **Current sprint:** derived, not stored — defined in ST-045 as "the sprint label with the highest `N` that still has open issues." No `current_sprint_number` field is needed on the Project entity.
+- **Multi-sprint issues:** an issue carrying two sprint labels (e.g. it spilled from `sprint-5` to `sprint-6`) counts toward both sprints. No deduplication logic required.
+- **Pre-sprint backlog:** issues with no `sprint-N` label are excluded from sprint sections. They are not displayed in v1.0 — an "unassigned" view may be added later if PM raises it as a gap.
+- **Closed sprints:** historical labels are never removed. Cumulative QA / sprint totals iterate `sprint-1` through the highest `N` ever seen for the project.
+
+### 12.2 At Risk vs Behind threshold (resolves Q2)
+
+Status is computed at read time on every dashboard request — there is no stored status field and no scheduled recomputation. Inputs are pulled from the milestone or sprint record (`start_date`, `due_date`, `total_issues`, `closed_issues`).
+
+**Computation:**
+- `expected_complete_pct = (today - start_date) / (due_date - start_date)`
+- `actual_complete_pct = closed_issues / total_issues`
+
+**Thresholds (issue-count basis for v1.0; story points may replace this in a later version if reliably tagged):**
+
+| Status | Rule |
+|--------|------|
+| **On Track** | `actual_complete_pct ≥ expected_complete_pct − 10%` |
+| **At Risk** | `actual_complete_pct` is `10–25%` behind `expected_complete_pct` |
+| **Behind** | `actual_complete_pct < expected_complete_pct − 25%` **OR** `today > due_date AND closed_issues < total_issues` |
+
+**Edge cases:**
+- `today < start_date` (sprint not started) → On Track
+- `total_issues = 0` → On Track with note "no issues assigned"
+- Milestone has no `due_date` set in GitHub → status = `unknown`, displayed as "Missing due date" (does not break the rest of the page)
+
+**Tuning note:** the 10% / 25% bands are starting values. PM will revisit after first usage; tightening to 5% / 15% remains an option if alert fatigue is not a concern.
 
 ---
 
@@ -305,3 +337,4 @@ Automatic alerts sent to the relevant user when a threshold is crossed.
 | Version | Date | Change | Author |
 |---------|------|--------|--------|
 | v1.0 | 2026-05-05 | Initial draft | PM |
+| v1.1 | 2026-05-08 | Resolved Open Questions #1 (sprint label `sprint-N`) and #2 (At Risk burn-rate 10/25); added §12.1 and §12.2 | PM |

@@ -39,5 +39,10 @@ Establish the core application shell, organisation entity, user accounts, and ro
 | ST-003 | User registration and login | 5 |
 | ST-004 | Implement RBAC — CTO/CEO and PM roles | 5 |
 | ST-005 | Route and API permission guards by role | 5 |
+| ST-050 | Create user flow — direct Cognito creation by Manager | 5 |
+| ST-051 | Manage User — reset password (admin-initiated) | 3 |
+| ST-052 | Manage User — change user role | 2 |
+| ST-053 | Manage User — disable and re-enable user | 3 |
+| ST-054 | Manage User — delete user (hard delete) | 3 |
 
-**Total Points:** 23
+**Total Points:** 39

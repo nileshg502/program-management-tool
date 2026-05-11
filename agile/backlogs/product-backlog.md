@@ -1,9 +1,9 @@
 # Product Backlog
 
-**Last Updated:** 2026-05-08
-**Total Points:** 255
-**Total Stories:** 60
-**Total Epics:** 9
+**Last Updated:** 2026-05-11
+**Total Points:** 273
+**Total Stories:** 63
+**Total Epics:** 10
 
 ---
 
@@ -20,6 +20,7 @@
 | EP-07 | Alerts & Notifications | 8 | 32 | P2 |
 | EP-08 | GitHub Integration | 8 | 42 | P1 |
 | EP-09 | Project Health Dashboard | 3 | 19 | P1 |
+| EP-10 | Sprint Health | 3 | 18 | P1 |
 
 ---
 
@@ -74,8 +75,11 @@
 | ST-058 | CR Summary — add origin classification and source deviation link | EP-09 | 3 | Not Started | ST-029, ST-030 |
 | ST-059 | Project Health read model and `GET /projects/{id}/health` API | EP-09 | 8 | Not Started | ST-019, ST-020, ST-058 |
 | ST-060 | Project Health UI — single-page cockpit screen | EP-09 | 8 | Not Started | ST-059 |
+| ST-061 | Sprint Health read model and `GET /projects/{id}/sprint-health` API | EP-10 | 8 | Not Started | ST-044, ST-045 |
+| ST-062 | Sprint Health UI — per-sprint view with sprint selector dropdown | EP-10 | 5 | Not Started | ST-061 |
+| ST-063 | Sprint Health UI — consolidated `Overall` view across sprints | EP-10 | 5 | Not Started | ST-061, ST-062 |
 
-**EP-02 Total: 23 points | EP-03 Total: 28 points (P1) | EP-04 Total: 27 points | EP-08 Total: 42 points (P1) | EP-09 Total: 19 points (P1)**
+**EP-02 Total: 23 points | EP-03 Total: 28 points (P1) | EP-04 Total: 27 points | EP-08 Total: 42 points (P1) | EP-09 Total: 19 points (P1) | EP-10 Total: 18 points (P1)**
 
 ---
 
@@ -132,3 +136,4 @@
 - **Data ownership rule confirmed by PM on 2026-05-08.** All Trackwise UI data must be stored in the Trackwise database. Frontend reads only Trackwise APIs — never GitHub or other external systems directly. Backend may call GitHub server-side with a 60-second TTL cache for milestone metadata and sprint membership only. No scheduled sync, no mirror table, no "last synced" UX, no manual refresh button for v1.0. ADR-008 (drafted, awaiting Architect review) codifies this; ADR-007 will be marked Superseded
 - **PRD Open Questions #1 and #2 resolved by PM on 2026-05-08.** Q1 — sprint label pattern is `sprint-N` (numeric suffix); `sprint_label_pattern` field on Project defaults to `sprint-N` per ST-045; current sprint is derived, no `current_sprint_number` field needed. Q2 — At Risk / Behind status computed at read time using burn-rate; bands are 10% / 25% on issue-count basis; full rules in PRD §12.2. ST-019, ST-020, ST-045, ST-059 are unblocked
 - **EP-09 Deviation and QA dependencies parked by PM on 2026-05-08.** EP-09's dashboard reads QA Reports and Deviations, neither of which has a backlog entity yet. PM has parked the schema decision — either PM will define the structure, or PM will provide an existing DB and we build against it. Until resolved, ST-059 stubs the affected sections (returns `data_available: false` with reason `"awaiting schema"`). ST-058's `source_deviation_id` is a soft reference for v1.0 — strict foreign-key validation deferred until the Deviation entity ships
+- **EP-10 (Sprint Health) added 2026-05-11 by PM.** Per-project sprint health view with sprint selector dropdown (`Overall` default + every sprint label). Four blocks per sprint: Epics & Stories, Planned vs Completed, Bugs Logged vs Resolved, End-of-sprint Carryover. ST-061 adds the API; ST-062 adds the per-sprint UI; ST-063 adds the consolidated `Overall` trend table. v1.0 is count-based only — hours / charts / drill-downs deferred. Sits underneath EP-09's Sprint Progress tile, not a replacement. Sprint window date rule (label creation vs milestone due-date) to be locked at ST-061 grooming. Reuses ADR-011 cache — no new DB collections

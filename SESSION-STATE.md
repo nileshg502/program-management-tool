@@ -1,6 +1,6 @@
 # Session State
 
-**Last Updated:** 2026-05-08 (Session 8 — extended to include Architect work)
+**Last Updated:** 2026-05-11 (Session 9 — PM)
 **Current Branch:** master
 **Total Delivered:** 0 points across 0 sprints
 
@@ -8,13 +8,59 @@
 
 ## Current State
 
-Session 8 ran in two halves. **PM half:** new epic EP-09 (Project Health Dashboard) + three stories, data ownership rule confirmed (ADR-008), PRD §12 Q1 + Q2 resolved (`sprint-N`, burn-rate 10/25), dashboard design locked + parked items documented. **Architect half:** four new ADRs drafted (ADR-009 through ADR-012), ADR-002 amended, ADR-008 finalized as Approved, ADR-007 marked Superseded, ADR-003 amended for in-app user management, ADR-004 amended to align with ADR-008. Canonical data dictionary rewritten at `architecture/data-model.md` with Mermaid ER diagram covering all 13 collections.
+Session 9 (PM): new epic **EP-10 — Sprint Health** added with three stories (ST-061 API, ST-062 per-sprint UI, ST-063 consolidated Overall UI). Per-project sprint health view with sprint dropdown, four data blocks per sprint (Epics & Stories, Planned vs Completed, Bugs Logged vs Resolved, End-of-sprint Carryover). Sits underneath EP-09's Sprint Progress tile, not a replacement. Count-based only for v1.0; reuses ADR-011 cache layer with no new DB collections.
 
-Backlog now: **255 points / 60 stories / 9 epics.**
+Backlog now: **273 points / 63 stories / 10 epics.**
 
 ---
 
-## Changes Made This Session (Session 8 — PM)
+## Changes Made This Session (Session 9 — PM)
+
+**1. New epic — EP-10 Sprint Health — DONE**
+- File: `agile/epics/EP-10-sprint-health.md`
+- Goal: per-project sprint health view answering "what's in this sprint?", "what got done?", "what's leaking forward?"
+- Sprint dropdown: `Overall` (default, consolidated) + every sprint label
+- Four blocks per sprint: Epics & Stories, Planned vs Completed, Bugs Logged vs Resolved, End-of-sprint Carryover
+- Sits underneath EP-09's Sprint Progress tile — not a replacement
+- Total: 18 points / 3 stories / Priority P1
+
+**2. New stories — DONE (3 stories, 18 points)**
+
+EP-10 — Sprint Health:
+- ST-061 — Sprint Health read model and `GET /projects/{id}/sprint-health` API (P1, 8)
+- ST-062 — Sprint Health UI — per-sprint view with sprint selector dropdown (P1, 5)
+- ST-063 — Sprint Health UI — consolidated `Overall` view across sprints (P1, 5)
+
+**3. PM defaults documented as assumptions in EP-10 epic**
+- Epic = GitHub milestone; "in sprint" = label present
+- "Completed" = GitHub `closed` + sprint label present
+- "Bug logged in sprint" = `created_at` inside sprint window
+- "Pulled forward" = labelled this sprint, created before sprint window
+- "Resolved" = GitHub `closed` (QA-verified deferred)
+- Carryover for EP-10 includes epics (EP-09's Sprint Progress tile excludes them)
+- Sprint window date rule deferred to ST-061 grooming
+
+**4. Backlog updated — DONE**
+- Totals: 255 → 273 points, 60 → 63 stories, 9 → 10 epics
+- ST-061 / ST-062 / ST-063 rows added under P1 section
+- EP-10 row added to Epics Summary
+- Grooming note added introducing EP-10 with scope and v1.0 limitations
+
+---
+
+## Decisions Made This Session (Session 9)
+
+**EP-10 scope — APPROVED by PM**
+- Per-project only (no cross-project rollup)
+- Count-based metrics only for v1.0 — hours / charts / drill-downs deferred
+- Sprint dropdown options: `Overall` + every sprint that has ever existed, no cap
+- Consolidated `Overall` view ships as a minimal trend table; PM revisits format after first usage
+- Carryover for end-of-sprint block includes epics (EP-10 differs from EP-09's Sprint Progress tile which excludes epics)
+- Epic "completed in sprint" treated as meaningless in v1.0 — column reads "—" with tooltip, completed count returns 0
+
+---
+
+## Changes Made Previous Session (Session 8 — PM)
 
 **1. New epic — EP-09 Project Health Dashboard — DONE**
 - File: `agile/epics/EP-09-project-health-dashboard.md`
@@ -41,7 +87,7 @@ EP-09 — Project Health Dashboard:
 
 ---
 
-## Decisions Made This Session (Session 8)
+## Decisions Made Previous Session (Session 8)
 
 **Data ownership rule — APPROVED by PM**
 - All data displayed in Trackwise UI must be stored in the Trackwise database
@@ -215,6 +261,7 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 | 6 | UX Designer | Full mockup rebuild — all 14 screens with design tokens, SVG icons, fixed shell, polished components. Added Manage User drawer (S-15), Manage Client drawer (S-16), File Preview modal (parsed + raw markdown), multi-file tracker, palette comparison tool. Final treatment: Violet → Pink + Warm Cream |
 | 7 | BA | 8 new stories (ST-050 → ST-057) covering user creation, manage-user, manage-client. ADR-003 reopen approved by PM. GitHub file reading rejected — ADR-007 needs update, mockup needs File Preview / multi-file removed |
 | 8 | PM + Architect | **PM half:** new epic EP-09 + 3 stories (ST-058 → ST-060), ADR-008 drafted, PRD Q1 + Q2 resolved (`sprint-N`, burn-rate 10/25), dashboard design (hours only, two CR tabs, sprint scope dropdown, deviation running-balance, carryover line), QA + Deviation schemas parked. **Architect half:** four new ADRs (ADR-009 Core Entities, ADR-010 Project Operations, ADR-011 GitHub Mirror Cache, ADR-012 Seeding Strategy). ADR-002 amended; ADR-008 Approved; ADR-007 Superseded; ADR-003 + ADR-004 amended. Canonical data dictionary rewritten with Mermaid ER diagram |
+| 9 | PM | New epic EP-10 Sprint Health + 3 stories (ST-061 API, ST-062 per-sprint UI, ST-063 consolidated Overall UI). Count-based metrics only for v1.0; reuses ADR-011 cache; sits under EP-09's Sprint Progress tile. PM defaults documented as assumptions inside the epic — sprint window date rule deferred to grooming |
 
 ---
 
@@ -237,7 +284,10 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 - ~~GitHub label convention for sprints~~ — **resolved 2026-05-08** (sprint-N, see PRD §12.1)
 - ~~At Risk vs Behind threshold~~ — **resolved 2026-05-08** (burn-rate 10/25, see PRD §12.2)
 - Partially Available definition (hours vs PM flag) → still open, blocks ST-026
-- **PRD revision still needed** — add Section for EP-09 Project Health Dashboard scope, CR origin classification, and data ownership rule (ADR-008). v1.1 has resolved Q1 + Q2 only
+- **PRD revision still needed** — add Section for EP-09 Project Health Dashboard scope, CR origin classification, data ownership rule (ADR-008), and EP-10 Sprint Health scope. v1.1 has resolved Q1 + Q2 only
+
+**EP-10 grooming follow-up**
+- Sprint window date rule — pick one of: label creation timestamp, milestone due-date, first issue close in sprint. Lock at ST-061 grooming
 
 **Parked by PM (awaiting structure definition)**
 - QA Report entity — schema and entry path undefined. Either PM defines, or PM provides existing DB

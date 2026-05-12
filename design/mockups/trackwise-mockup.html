@@ -508,26 +508,83 @@ button { font-family: inherit; }
 .status-dot.gray   { background: var(--gray-400); box-shadow: 0 0 0 3px var(--gray-100); }
 
 /* ═══════════════════════════════════════════════════════════════
-   SYNC BAR
+   SPRINT HEALTH (EP-10) — sprint selector, 2x2 block grid, deltas
 ═══════════════════════════════════════════════════════════════ */
-.sync-bar {
-  display: flex;
-  align-items: center;
+.sh-section { margin-top: var(--sp-5); }
+.sh-bar {
+  display: flex; align-items: center; justify-content: space-between;
   gap: var(--sp-3);
   padding: var(--sp-3) var(--sp-4);
+  background: var(--primary-50);
+  border: 1px solid var(--primary-100);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  border-bottom: none;
+}
+.sh-bar-left { display: flex; align-items: center; gap: var(--sp-2); font-size: 14px; font-weight: 600; color: var(--gray-900); }
+.sh-bar-left svg { width: 16px; height: 16px; color: var(--primary); }
+.sh-bar-right { display: flex; align-items: center; gap: var(--sp-2); }
+.sh-bar-right .form-label-inline { font-size: 12px; color: var(--gray-600); font-weight: 500; }
+.sh-bar-right select.form-select { padding: 4px 28px 4px 10px; font-size: 12px; min-width: 160px; font-family: var(--font-mono); }
+
+.sh-body {
   background: #FFFDF9;
   border: 1px solid var(--gray-200);
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  padding: var(--sp-4);
+}
+
+.sh-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+.sh-block {
+  background: var(--gray-25);
+  border: 1px solid var(--gray-200);
   border-radius: var(--r-md);
-  font-size: 13px;
-  color: var(--gray-600);
-  margin-bottom: var(--sp-5);
+  padding: var(--sp-4);
 }
-.sync-bar.error {
-  background: var(--danger-50);
-  border-color: var(--danger-100);
-  color: var(--danger);
+.sh-block-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-3); }
+.sh-block-title { font-size: 13px; font-weight: 600; color: var(--gray-900); display: flex; align-items: center; gap: 6px; }
+.sh-block-title svg { width: 14px; height: 14px; color: var(--gray-500); }
+
+.sh-stat-row { display: flex; align-items: baseline; gap: var(--sp-2); margin-bottom: 4px; }
+.sh-stat-num { font-size: 24px; font-weight: 600; color: var(--gray-900); line-height: 1; }
+.sh-stat-num.muted { color: var(--gray-400); }
+.sh-stat-sep { color: var(--gray-300); font-size: 18px; }
+.sh-stat-lbl { font-size: 12px; color: var(--gray-500); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; font-weight: 500; }
+
+.sh-delta {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
 }
-.sync-bar svg { width: 14px; height: 14px; }
+.sh-delta.pos { background: var(--success-50); color: var(--success); }
+.sh-delta.neg { background: var(--danger-50);  color: var(--danger); }
+.sh-delta.zero { background: var(--gray-100);  color: var(--gray-600); }
+
+.sh-tooltip-icon {
+  width: 14px; height: 14px; color: var(--gray-400); cursor: help;
+}
+
+.sh-mini-list { margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px dashed var(--gray-200); }
+.sh-mini-list-row { display: flex; justify-content: space-between; gap: var(--sp-2); font-size: 12px; padding: 3px 0; color: var(--gray-700); }
+.sh-mini-list-row .lbl { display: flex; align-items: center; gap: 6px; }
+.sh-mini-list-row .lbl code { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.sh-mini-list-row .val { font-variant-numeric: tabular-nums; color: var(--gray-900); font-weight: 500; }
+
+.sh-empty {
+  text-align: center; padding: var(--sp-3); color: var(--gray-500); font-size: 12px; font-style: italic;
+}
+
+/* Overall consolidated table */
+.sh-overall table.tbl th,
+.sh-overall table.tbl td { font-variant-numeric: tabular-nums; text-align: right; }
+.sh-overall table.tbl th:first-child,
+.sh-overall table.tbl td:first-child { text-align: left; }
+.sh-overall .sprint-cell { font-family: var(--font-mono); font-size: 12px; color: var(--gray-700); }
+.sh-overall tr.totals td { font-weight: 600; background: var(--gray-50); border-top: 2px solid var(--gray-200); }
 
 /* ═══════════════════════════════════════════════════════════════
    TABLES
@@ -934,30 +991,6 @@ table.tbl { width: 100%; border-collapse: collapse; }
 .person-role { font-size: 12px; color: var(--gray-500); }
 .person-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: var(--sp-2); }
 
-/* Multi-file tracker rows (Project Settings) */
-.file-list { display: flex; flex-direction: column; gap: var(--sp-2); }
-.file-row {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--sp-3);
-  padding: var(--sp-3);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--r-md);
-  background: var(--gray-25);
-}
-.file-row-icon {
-  width: 32px; height: 32px;
-  border-radius: var(--r-md);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.file-row-main { flex: 1; min-width: 0; }
-.file-row-top { display: flex; gap: var(--sp-2); margin-bottom: 6px; }
-.file-row-top .file-type-select { width: 160px; flex-shrink: 0; padding: 6px 10px; font-size: 12px; }
-.file-row-top .file-path-input { flex: 1; padding: 6px 10px; font-family: var(--font-mono); font-size: 12px; }
-.file-row-bot { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
-
 /* Action button list (Manage User drawer) */
 .action-list { display: flex; flex-direction: column; gap: var(--sp-2); }
 .action-btn {
@@ -1238,18 +1271,6 @@ table.tbl { width: 100%; border-collapse: collapse; }
           <div class="page-title">Portfolio Dashboard</div>
           <div class="page-sub">All clients and active projects across the organization</div>
         </div>
-        <div class="page-actions">
-          <button class="btn btn-default btn-sm" onclick="showToast('Syncing all projects…', 'info')">
-            <svg><use href="#i-refresh"/></svg> Sync all
-          </button>
-        </div>
-      </div>
-
-      <!-- Sync bar -->
-      <div class="sync-bar">
-        <svg style="color:var(--success)"><use href="#i-check"/></svg>
-        <strong style="color:var(--gray-900)">All projects in sync</strong>
-        <span>· Last synced 3 minutes ago · Next sync in 12 minutes</span>
       </div>
 
       <!-- KPI row -->
@@ -1293,9 +1314,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <span class="badge badge-success"><span class="status-dot green"></span>On Track</span>
             </div>
             <div class="proj-card-rows">
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Velocity (last 3)</span><span class="proj-card-row-val">42 pts</span></div>
+              <div class="proj-card-row"><span class="proj-card-row-lbl">Sprint completed (last 3)</span><span class="proj-card-row-val">14 stories · 6 bugs</span></div>
               <div class="proj-card-row"><span class="proj-card-row-lbl">Open CRs / Pending</span><span class="proj-card-row-val">3 · <span style="color:var(--warning)">38h</span></span></div>
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Last sync</span><span class="proj-card-row-val">3 min ago</span></div>
             </div>
             <div class="proj-card-progress">
               <div class="flex items-center" style="justify-content:space-between;margin-bottom:6px">
@@ -1314,9 +1334,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <span class="badge badge-warning"><span class="status-dot amber"></span>At Risk</span>
             </div>
             <div class="proj-card-rows">
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Velocity (last 3)</span><span class="proj-card-row-val">28 pts</span></div>
+              <div class="proj-card-row"><span class="proj-card-row-lbl">Sprint completed (last 3)</span><span class="proj-card-row-val">9 stories · 4 bugs</span></div>
               <div class="proj-card-row"><span class="proj-card-row-lbl">Open CRs / Pending</span><span class="proj-card-row-val">5 · <span style="color:var(--warning)">62h</span></span></div>
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Last sync</span><span class="proj-card-row-val">8 min ago</span></div>
             </div>
             <div class="proj-card-progress">
               <div class="flex items-center" style="justify-content:space-between;margin-bottom:6px">
@@ -1345,9 +1364,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <span class="badge badge-success"><span class="status-dot green"></span>On Track</span>
             </div>
             <div class="proj-card-rows">
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Velocity (last 3)</span><span class="proj-card-row-val">36 pts</span></div>
+              <div class="proj-card-row"><span class="proj-card-row-lbl">Sprint completed (last 3)</span><span class="proj-card-row-val">12 stories · 3 bugs</span></div>
               <div class="proj-card-row"><span class="proj-card-row-lbl">Open CRs / Pending</span><span class="proj-card-row-val">2 · 14h</span></div>
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Last sync</span><span class="proj-card-row-val">2 min ago</span></div>
             </div>
             <div class="proj-card-progress">
               <div class="flex items-center" style="justify-content:space-between;margin-bottom:6px">
@@ -1366,9 +1384,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <span class="badge badge-danger"><span class="status-dot red"></span>Behind</span>
             </div>
             <div class="proj-card-rows">
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Velocity (last 3)</span><span class="proj-card-row-val">19 pts</span></div>
+              <div class="proj-card-row"><span class="proj-card-row-lbl">Sprint completed (last 3)</span><span class="proj-card-row-val">6 stories · 2 bugs</span></div>
               <div class="proj-card-row"><span class="proj-card-row-lbl">Open CRs / Pending</span><span class="proj-card-row-val">7 · <span style="color:var(--danger)">94h</span></span></div>
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Last sync</span><span class="proj-card-row-val">12 min ago</span></div>
             </div>
             <div class="proj-card-progress">
               <div class="flex items-center" style="justify-content:space-between;margin-bottom:6px">
@@ -1397,9 +1414,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <span class="badge badge-success"><span class="status-dot green"></span>On Track</span>
             </div>
             <div class="proj-card-rows">
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Velocity (last 3)</span><span class="proj-card-row-val">48 pts</span></div>
+              <div class="proj-card-row"><span class="proj-card-row-lbl">Sprint completed (last 3)</span><span class="proj-card-row-val">16 stories · 5 bugs</span></div>
               <div class="proj-card-row"><span class="proj-card-row-lbl">Open CRs / Pending</span><span class="proj-card-row-val">1 · 8h</span></div>
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Last sync</span><span class="proj-card-row-val">1 min ago</span></div>
             </div>
             <div class="proj-card-progress">
               <div class="flex items-center" style="justify-content:space-between;margin-bottom:6px">
@@ -1418,9 +1434,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <span class="badge badge-warning"><span class="status-dot amber"></span>At Risk</span>
             </div>
             <div class="proj-card-rows">
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Velocity (last 3)</span><span class="proj-card-row-val">26 pts</span></div>
+              <div class="proj-card-row"><span class="proj-card-row-lbl">Sprint completed (last 3)</span><span class="proj-card-row-val">8 stories · 3 bugs</span></div>
               <div class="proj-card-row"><span class="proj-card-row-lbl">Open CRs / Pending</span><span class="proj-card-row-val">4 · <span style="color:var(--warning)">52h</span></span></div>
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Last sync</span><span class="proj-card-row-val">5 min ago</span></div>
             </div>
             <div class="proj-card-progress">
               <div class="flex items-center" style="justify-content:space-between;margin-bottom:6px">
@@ -1449,9 +1464,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <span class="badge badge-success"><span class="status-dot green"></span>On Track</span>
             </div>
             <div class="proj-card-rows">
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Velocity (last 3)</span><span class="proj-card-row-val">52 pts</span></div>
+              <div class="proj-card-row"><span class="proj-card-row-lbl">Sprint completed (last 3)</span><span class="proj-card-row-val">18 stories · 7 bugs</span></div>
               <div class="proj-card-row"><span class="proj-card-row-lbl">Open CRs / Pending</span><span class="proj-card-row-val">2 · 22h</span></div>
-              <div class="proj-card-row"><span class="proj-card-row-lbl">Last sync</span><span class="proj-card-row-val">4 min ago</span></div>
             </div>
             <div class="proj-card-progress">
               <div class="flex items-center" style="justify-content:space-between;margin-bottom:6px">
@@ -1482,9 +1496,6 @@ table.tbl { width: 100%; border-collapse: collapse; }
           <div class="page-sub" id="proj-sub">Acme Corp · Fixed Scope · GitHub: acme/portal-revamp</div>
         </div>
         <div class="page-actions">
-          <button class="btn btn-default btn-sm" onclick="showToast('Syncing project…', 'info')">
-            <svg><use href="#i-refresh"/></svg> Sync now
-          </button>
           <button class="btn btn-default btn-sm" onclick="openDrawer('drawer-assign')">
             <svg><use href="#i-users"/></svg> Assign team
           </button>
@@ -1494,16 +1505,11 @@ table.tbl { width: 100%; border-collapse: collapse; }
         </div>
       </div>
 
-      <div class="sync-bar">
-        <svg style="color:var(--success)"><use href="#i-check"/></svg>
-        <span><strong style="color:var(--gray-900)">Synced 3 min ago</strong> · 12 milestones · 8 sprint labels detected · cr-tracker.md parsed OK</span>
-      </div>
-
       <!-- KPIs -->
       <div class="card-grid mb-6">
         <div class="kpi"><div class="kpi-label">Status</div><div class="kpi-value" style="color:var(--success);font-size:18px;line-height:1.4">On Track</div><div class="kpi-foot">Velocity stable across last 3 sprints</div></div>
-        <div class="kpi"><div class="kpi-label">Sprint Velocity</div><div class="kpi-value">42<span style="font-size:14px;color:var(--gray-500);font-weight:400"> pts/sprint</span></div><div class="kpi-foot">Avg of last 3 sprints</div></div>
-        <div class="kpi"><div class="kpi-label">Sprint progress</div><div class="kpi-value">7<span style="font-size:14px;color:var(--gray-500);font-weight:400"> of 12</span></div><div class="kpi-foot">58% complete · 5 sprints remaining</div></div>
+        <div class="kpi"><div class="kpi-label">Sprint throughput</div><div class="kpi-value">14<span style="font-size:14px;color:var(--gray-500);font-weight:400"> stories · 6 bugs</span></div><div class="kpi-foot">Avg per sprint, last 3</div></div>
+        <div class="kpi"><div class="kpi-label">Sprint progress</div><div class="kpi-value">7<span style="font-size:14px;color:var(--gray-500);font-weight:400"> of 12</span></div><div class="kpi-foot">58% complete · +3 carried from sprint-6</div></div>
         <div class="kpi"><div class="kpi-label">Open Change Requests</div><div class="kpi-value">3</div><div class="kpi-foot">38h pending impact</div></div>
       </div>
 
@@ -1540,7 +1546,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
             </div>
           </div>
           <div class="card">
-            <div class="card-header"><div class="card-title">CR Summary</div><span class="badge badge-gray">From cr-tracker.md</span></div>
+            <div class="card-header"><div class="card-title">CR Summary</div></div>
             <div class="card-body" style="padding:var(--sp-3) var(--sp-5)">
               <div class="info-row"><span class="info-lbl">Total CRs</span><span class="info-val">14</span></div>
               <div class="info-row"><span class="info-lbl">Absorbed</span><span class="info-val" style="color:var(--success)">5</span></div>
@@ -1566,6 +1572,195 @@ table.tbl { width: 100%; border-collapse: collapse; }
             </table>
           </div>
         </div>
+
+        <!-- ─────────────────────────────────────────────────────────
+             EP-10 — SPRINT HEALTH
+             Sits underneath Sprint Progress / Recent milestones.
+             Sprint selector: Overall (default) + every sprint label.
+        ───────────────────────────────────────────────────────── -->
+        <div class="sh-section">
+          <div class="sh-bar">
+            <div class="sh-bar-left">
+              <svg><use href="#i-trend-up"/></svg>
+              Sprint Health
+            </div>
+            <div class="sh-bar-right">
+              <span class="form-label-inline">Sprint</span>
+              <select class="form-select" id="sh-sprint-select" onchange="shSelectSprint(this.value)">
+                <option value="overall" selected>Overall</option>
+                <option value="sprint-8">sprint-8 (current)</option>
+                <option value="sprint-7">sprint-7</option>
+                <option value="sprint-6">sprint-6</option>
+                <option value="sprint-5">sprint-5</option>
+                <option value="sprint-4">sprint-4</option>
+                <option value="sprint-3">sprint-3</option>
+                <option value="sprint-2">sprint-2</option>
+                <option value="sprint-1">sprint-1</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ─── Overall consolidated view (default) ─── -->
+          <div class="sh-body sh-overall" id="sh-view-overall">
+            <div class="text-xs muted mb-3">Trend across every sprint that has ever existed. Counts only — no points.</div>
+            <div class="table-wrap">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Sprint</th>
+                    <th>Stories planned</th>
+                    <th>Stories completed</th>
+                    <th>Bugs logged</th>
+                    <th>Bugs resolved</th>
+                    <th>Carryover →</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td class="sprint-cell">sprint-1</td><td>8</td><td>7</td><td>2</td><td>2</td><td>1</td></tr>
+                  <tr><td class="sprint-cell">sprint-2</td><td>10</td><td>9</td><td>3</td><td>3</td><td>1</td></tr>
+                  <tr><td class="sprint-cell">sprint-3</td><td>12</td><td>10</td><td>4</td><td>3</td><td>3</td></tr>
+                  <tr><td class="sprint-cell">sprint-4</td><td>11</td><td>11</td><td>2</td><td>2</td><td>0</td></tr>
+                  <tr><td class="sprint-cell">sprint-5</td><td>13</td><td>10</td><td>5</td><td>4</td><td>4</td></tr>
+                  <tr><td class="sprint-cell">sprint-6</td><td>14</td><td>9</td><td>6</td><td>4</td><td>7</td></tr>
+                  <tr><td class="sprint-cell">sprint-7</td><td>15</td><td>12</td><td>4</td><td>3</td><td>4</td></tr>
+                  <tr><td class="sprint-cell">sprint-8</td><td>14</td><td>3</td><td>2</td><td>1</td><td>—</td></tr>
+                  <tr class="totals"><td>Totals</td><td>97</td><td>71</td><td>28</td><td>22</td><td>20</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-xs muted mt-3" style="font-style:italic">
+              Carryover counts stories + bugs labelled in the next sprint that were created before that sprint began.
+              Current sprint shows <code style="font-family:var(--font-mono)">—</code> until close.
+            </div>
+          </div>
+
+          <!-- ─── Per-sprint view (hidden by default) ─── -->
+          <div class="sh-body" id="sh-view-sprint" style="display:none">
+            <div class="flex items-center mb-3" style="justify-content:space-between">
+              <div class="text-strong" style="font-size:14px" id="sh-sprint-title">Sprint health — sprint-7</div>
+              <div class="text-xs muted" id="sh-sprint-window">Window: Apr 14 – Apr 28, 2026 · 14 days</div>
+            </div>
+
+            <div class="sh-grid">
+
+              <!-- Block 1 — Epics & Stories -->
+              <div class="sh-block">
+                <div class="sh-block-head">
+                  <div class="sh-block-title">
+                    <svg><use href="#i-cube"/></svg>
+                    Epics & Stories
+                  </div>
+                  <span class="text-xs muted">In sprint</span>
+                </div>
+                <div class="sh-stat-lbl">Epics touched</div>
+                <div class="sh-stat-row">
+                  <span class="sh-stat-num" id="sh-epics-count">3</span>
+                  <span class="text-xs muted">epics contain stories in this sprint</span>
+                </div>
+                <div class="sh-mini-list" id="sh-epics-list">
+                  <div class="sh-mini-list-row">
+                    <span class="lbl"><code>EP-01</code> Foundation &amp; Auth</span>
+                    <span class="val">5 stories</span>
+                  </div>
+                  <div class="sh-mini-list-row">
+                    <span class="lbl"><code>EP-04</code> Notifications</span>
+                    <span class="val">6 stories</span>
+                  </div>
+                  <div class="sh-mini-list-row">
+                    <span class="lbl"><code>EP-06</code> Reporting</span>
+                    <span class="val">4 stories</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Block 2 — Planned vs Completed -->
+              <div class="sh-block">
+                <div class="sh-block-head">
+                  <div class="sh-block-title">
+                    <svg><use href="#i-check"/></svg>
+                    Planned vs Completed
+                  </div>
+                  <span class="text-xs muted">Counts</span>
+                </div>
+                <div class="sh-stat-lbl">Stories</div>
+                <div class="sh-stat-row">
+                  <span class="sh-stat-num" id="sh-stories-completed">12</span>
+                  <span class="sh-stat-sep">/</span>
+                  <span class="sh-stat-num muted" id="sh-stories-planned">15</span>
+                  <span class="sh-delta pos" id="sh-stories-delta">80%</span>
+                </div>
+                <div class="sh-stat-lbl mt-2" style="margin-top:var(--sp-3)">Epics completed</div>
+                <div class="sh-stat-row">
+                  <span class="sh-stat-num muted">—</span>
+                  <span class="text-xs muted" title="Epic completion at sprint level isn't meaningful in v1.0; epics span sprints. Tracked at milestone level instead.">
+                    <svg class="sh-tooltip-icon"><use href="#i-info"/></svg>
+                    Not tracked at sprint level
+                  </span>
+                </div>
+                <div class="sh-mini-list">
+                  <div class="sh-mini-list-row"><span class="lbl">Planned at sprint start</span><span class="val">15</span></div>
+                  <div class="sh-mini-list-row"><span class="lbl">Added mid-sprint</span><span class="val">+0</span></div>
+                  <div class="sh-mini-list-row"><span class="lbl">Removed mid-sprint</span><span class="val">−1</span></div>
+                  <div class="sh-mini-list-row"><span class="lbl">Closed by sprint end</span><span class="val">12</span></div>
+                </div>
+              </div>
+
+              <!-- Block 3 — Bugs Logged vs Resolved -->
+              <div class="sh-block">
+                <div class="sh-block-head">
+                  <div class="sh-block-title">
+                    <svg><use href="#i-alert"/></svg>
+                    Bugs Logged vs Resolved
+                  </div>
+                  <span class="text-xs muted">Counts</span>
+                </div>
+                <div class="sh-stat-lbl">Bugs in sprint window</div>
+                <div class="sh-stat-row">
+                  <span class="sh-stat-num">3</span>
+                  <span class="sh-stat-sep">/</span>
+                  <span class="sh-stat-num muted">4</span>
+                  <span class="sh-delta neg">−1 net</span>
+                </div>
+                <div class="sh-mini-list">
+                  <div class="sh-mini-list-row"><span class="lbl">Logged (created in window)</span><span class="val">4</span></div>
+                  <div class="sh-mini-list-row"><span class="lbl">Resolved (closed in window)</span><span class="val">3</span></div>
+                  <div class="sh-mini-list-row"><span class="lbl">Open at sprint end</span><span class="val">1</span></div>
+                  <div class="sh-mini-list-row" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--gray-200)">
+                    <span class="lbl">High / Critical only</span>
+                    <span class="val">2 logged · 2 resolved</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Block 4 — End-of-sprint Carryover -->
+              <div class="sh-block">
+                <div class="sh-block-head">
+                  <div class="sh-block-title">
+                    <svg><use href="#i-refresh"/></svg>
+                    End-of-sprint Carryover
+                  </div>
+                  <span class="text-xs muted">Leaked to next sprint</span>
+                </div>
+                <div class="sh-stat-lbl">Total carried forward</div>
+                <div class="sh-stat-row">
+                  <span class="sh-stat-num">4</span>
+                  <span class="text-xs muted">items now labelled <code style="font-family:var(--font-mono)">sprint-8</code></span>
+                </div>
+                <div class="sh-mini-list">
+                  <div class="sh-mini-list-row"><span class="lbl">Stories carried</span><span class="val">3</span></div>
+                  <div class="sh-mini-list-row"><span class="lbl">Bugs carried</span><span class="val">1</span></div>
+                  <div class="sh-mini-list-row"><span class="lbl">Epics partially in next sprint</span><span class="val">2</span></div>
+                  <div class="sh-mini-list-row" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--gray-200)">
+                    <span class="lbl">Pulled forward into this sprint <svg class="sh-tooltip-icon" title="Items labelled sprint-7 that were created before sprint-7's window — picked up from a prior sprint."><use href="#i-info"/></svg></span>
+                    <span class="val">2</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Team tab -->
@@ -1593,7 +1788,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
       <!-- Forensic tab -->
       <div class="tab-pane" data-tabpane="pd-forensic">
         <div class="card">
-          <div class="card-header"><div class="card-title">CR tracker — 14 entries</div><div class="flex items-center gap-2"><span class="text-xs muted">Source: cr-tracker.md</span><button class="btn btn-default btn-sm" onclick="openModal('modal-forensic')"><svg><use href="#i-edit"/></svg> Update Summary</button></div></div>
+          <div class="card-header"><div class="card-title">CR tracker — 14 entries</div><button class="btn btn-default btn-sm" onclick="openModal('modal-forensic')"><svg><use href="#i-edit"/></svg> Update Summary</button></div>
           <div class="card-body" style="padding:0">
             <table class="tbl">
               <thead><tr><th>CR ID</th><th>Title</th><th>Type</th><th>Hours</th><th>Status</th><th>Decided</th></tr></thead>
@@ -1636,7 +1831,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <div class="notif-icon blue"><svg><use href="#i-info"/></svg></div>
               <div style="flex:1">
                 <div class="text-strong text-sm">CR-010 converted to scope</div>
-                <div class="text-xs muted">Admin role split — 22h converted, billable</div>
+                <div class="text-xs muted">Admin role split — 22h converted to scope</div>
                 <div class="alert-meta mt-2">Apr 18, 2026 · 11:08</div>
               </div>
             </div>
@@ -1644,7 +1839,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <div class="notif-icon amber"><svg><use href="#i-clock"/></svg></div>
               <div style="flex:1">
                 <div class="text-strong text-sm">Sprint label sync warning</div>
-                <div class="text-xs muted">2 issues missing sprint labels in Sprint 6 milestone</div>
+                <div class="text-xs muted">2 stories missing sprint labels in sprint-6 milestone</div>
                 <div class="alert-meta mt-2">Apr 14, 2026 · 16:40 · resolved</div>
               </div>
             </div>
@@ -1668,102 +1863,20 @@ table.tbl { width: 100%; border-collapse: collapse; }
             <div class="card-body">
               <div class="info-list">
                 <div class="info-row"><span class="info-lbl">Repository</span><span class="info-val"><a href="#"><svg width="14" height="14" style="vertical-align:-2px"><use href="#i-github"/></svg> acme/portal-revamp</a></span></div>
-                <div class="info-row"><span class="info-lbl">Sync interval</span><span class="info-val">15 minutes</span></div>
-                <div class="info-row"><span class="info-lbl">Last sync</span><span class="info-val" style="color:var(--success)">3 minutes ago · success</span></div>
                 <div class="info-row"><span class="info-lbl">Sprint label</span><span class="info-val" style="font-family:var(--font-mono)">sprint-N</span></div>
                 <div class="info-row"><span class="info-lbl">Blocked label</span><span class="info-val" style="font-family:var(--font-mono)">blocked</span></div>
               </div>
+              <div class="text-xs muted mt-4" style="padding-top:var(--sp-3);border-top:1px solid var(--gray-100)">Trackwise reads only milestones, sprint labels, and the blocked label from GitHub. All other data is stored in Trackwise.</div>
             </div>
           </div>
           <div class="card">
-            <div class="card-header"><div class="card-title">Last sync result</div><span class="text-xs muted">3 min ago</span></div>
+            <div class="card-header"><div class="card-title">Mirrored from GitHub</div></div>
             <div class="card-body">
               <div class="info-list">
-                <div class="info-row"><span class="info-lbl">Milestones</span><span class="info-val">12 fetched</span></div>
-                <div class="info-row"><span class="info-lbl">Sprint labels</span><span class="info-val">8 detected (sprint-1 → sprint-8)</span></div>
-                <div class="info-row"><span class="info-lbl">Blocked issues</span><span class="info-val">2</span></div>
-                <div class="info-row"><span class="info-lbl">Files read</span><span class="info-val">3 of 4 succeeded</span></div>
-                <div class="info-row"><span class="info-lbl">Next sync</span><span class="info-val">in 12 min</span></div>
+                <div class="info-row"><span class="info-lbl">Milestones</span><span class="info-val">12</span></div>
+                <div class="info-row"><span class="info-lbl">Sprint labels detected</span><span class="info-val">sprint-1 → sprint-8</span></div>
+                <div class="info-row"><span class="info-lbl">Blocked stories / bugs</span><span class="info-val">2</span></div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card mt-4">
-          <div class="card-header">
-            <div class="card-title">Tracked files — 4</div>
-            <div class="flex items-center gap-2"><span class="text-xs muted">Configured in Project Settings</span><button class="btn btn-default btn-sm" onclick="navApp('s-project-settings',document.querySelector('[data-nav=s-project-settings]'))"><svg><use href="#i-edit"/></svg> Edit</button></div>
-          </div>
-          <div class="card-body" style="padding:0">
-            <table class="tbl">
-              <thead><tr><th>Type</th><th>Path</th><th>Last Read</th><th>Status</th><th>Drives</th></tr></thead>
-              <tbody>
-                <tr>
-                  <td><span class="badge badge-info" style="background:var(--info-50);color:var(--info)"><svg width="12" height="12"><use href="#i-shield"/></svg> CR Tracker</span></td>
-                  <td style="font-family:var(--font-mono);font-size:12px">docs/cr-tracker.md</td>
-                  <td>3 min ago</td>
-                  <td><span class="badge badge-success"><span class="status-dot green"></span>Parsed · 14 entries</span></td>
-                  <td class="text-xs muted">CR Summary card · Forensic tab</td>
-                </tr>
-                <tr>
-                  <td><span class="badge badge-success"><svg width="12" height="12"><use href="#i-check"/></svg> Compliance</span></td>
-                  <td style="font-family:var(--font-mono);font-size:12px">reports/compliance.md</td>
-                  <td>3 min ago</td>
-                  <td><span class="badge badge-success"><span class="status-dot green"></span>Parsed · 8 / 8 pass</span></td>
-                  <td class="text-xs muted">Compliance widget</td>
-                </tr>
-                <tr>
-                  <td><span class="badge badge-danger"><svg width="12" height="12"><use href="#i-shield"/></svg> Security</span></td>
-                  <td style="font-family:var(--font-mono);font-size:12px">reports/security-scan.md</td>
-                  <td>3 min ago</td>
-                  <td><span class="badge badge-warning"><span class="status-dot amber"></span>Parsed · 2 high · 1 critical</span></td>
-                  <td class="text-xs muted">Security widget</td>
-                </tr>
-                <tr>
-                  <td><span class="badge badge-warning"><svg width="12" height="12"><use href="#i-refresh"/></svg> Rework</span></td>
-                  <td style="font-family:var(--font-mono);font-size:12px">reports/rework.md</td>
-                  <td class="muted">2 days ago</td>
-                  <td><span class="badge badge-danger"><span class="status-dot red"></span>File not found</span></td>
-                  <td class="text-xs muted">Rework widget · stale</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Visualisations driven by tracked files -->
-        <div class="card-grid mt-4" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
-          <div class="card">
-            <div class="card-header"><div class="card-title">Compliance</div><span class="badge badge-success">8 / 8</span></div>
-            <div class="card-body">
-              <svg viewBox="0 0 200 90" style="width:100%;height:90px">
-                <g font-size="9" fill="#6b7280">
-                  <rect x="6" y="20" width="22" height="60" fill="#16a34a" rx="2"/><text x="17" y="88" text-anchor="middle">Auth</text>
-                  <rect x="36" y="30" width="22" height="50" fill="#16a34a" rx="2"/><text x="47" y="88" text-anchor="middle">Data</text>
-                  <rect x="66" y="22" width="22" height="58" fill="#16a34a" rx="2"/><text x="77" y="88" text-anchor="middle">API</text>
-                  <rect x="96" y="35" width="22" height="45" fill="#16a34a" rx="2"/><text x="107" y="88" text-anchor="middle">Logs</text>
-                  <rect x="126" y="28" width="22" height="52" fill="#16a34a" rx="2"/><text x="137" y="88" text-anchor="middle">Audit</text>
-                  <rect x="156" y="40" width="22" height="40" fill="#16a34a" rx="2"/><text x="167" y="88" text-anchor="middle">RBAC</text>
-                </g>
-              </svg>
-              <div class="text-xs muted mt-2">All compliance checks passing. Source: <code style="font-family:var(--font-mono)">reports/compliance.md</code></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><div class="card-title">Security</div><span class="badge badge-warning">3 issues</span></div>
-            <div class="card-body">
-              <div class="info-row" style="border-bottom:1px solid var(--gray-100);padding:8px 0"><span class="info-lbl" style="width:100px">Critical</span><span class="info-val" style="color:var(--danger)">1</span></div>
-              <div class="info-row" style="border-bottom:1px solid var(--gray-100);padding:8px 0"><span class="info-lbl" style="width:100px">High</span><span class="info-val" style="color:var(--warning)">2</span></div>
-              <div class="info-row" style="border-bottom:1px solid var(--gray-100);padding:8px 0"><span class="info-lbl" style="width:100px">Medium</span><span class="info-val">5</span></div>
-              <div class="info-row" style="border-bottom:none;padding:8px 0"><span class="info-lbl" style="width:100px">Low</span><span class="info-val muted">12</span></div>
-              <div class="text-xs muted mt-2">Source: <code style="font-family:var(--font-mono)">reports/security-scan.md</code></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><div class="card-title">Rework</div><span class="badge badge-gray">Stale</span></div>
-            <div class="card-body">
-              <div class="text-xs muted">Last successful read: 2 days ago. The file at <code style="font-family:var(--font-mono)">reports/rework.md</code> could not be read on the latest sync.</div>
-              <button class="btn btn-default btn-sm mt-4">Retry now</button>
             </div>
           </div>
         </div>
@@ -2100,85 +2213,18 @@ table.tbl { width: 100%; border-collapse: collapse; }
               <div class="form-help">Format: owner/repo</div>
             </div>
             <div class="form-row">
-              <div class="form-group"><label class="form-label">Sync interval</label>
-                <select class="form-select"><option>5 minutes</option><option>10 minutes</option><option selected>15 minutes</option><option>30 minutes</option><option>60 minutes</option></select>
+              <div class="form-group"><label class="form-label">Sprint label pattern</label>
+                <input class="form-input" value="sprint-N" style="font-family:var(--font-mono)" />
+                <div class="form-help">Trackwise reads issues whose labels match this pattern. Default: <code style="font-family:var(--font-mono)">sprint-N</code></div>
               </div>
-              <div class="form-group"><label class="form-label">Sprint label prefix</label>
-                <input class="form-input" value="sprint-" style="font-family:var(--font-mono)" />
+              <div class="form-group"><label class="form-label">Blocked label</label>
+                <input class="form-input" value="blocked" style="font-family:var(--font-mono)" />
+                <div class="form-help">Label name used to flag blocked stories / bugs.</div>
               </div>
             </div>
 
-            <!-- Tracked files (multi-file reader) -->
-            <div class="form-group">
-              <div class="flex items-center" style="justify-content:space-between;margin-bottom:8px">
-                <label class="form-label" style="margin:0">Tracked files</label>
-                <span class="text-xs muted">Each file feeds a visualisation</span>
-              </div>
-
-              <div class="file-list" id="tracked-files">
-                <div class="file-row">
-                  <div class="file-row-icon" style="background:var(--info-50);color:var(--info)"><svg width="14" height="14"><use href="#i-shield"/></svg></div>
-                  <div class="file-row-main">
-                    <div class="file-row-top">
-                      <select class="form-select file-type-select"><option selected>CR Tracker</option><option>Compliance Report</option><option>Security Report</option><option>Rework Report</option><option>Test Coverage</option><option>Custom</option></select>
-                      <input class="form-input file-path-input" value="docs/cr-tracker.md" />
-                    </div>
-                    <div class="file-row-bot">
-                      <span class="badge badge-success" style="font-size:11px"><span class="status-dot green"></span>Parsed · 14 entries · 3 min ago</span>
-                      <a href="#" class="text-xs" onclick="event.preventDefault();openFilePreview('cr-tracker')">Preview</a>
-                    </div>
-                  </div>
-                  <button class="icon-btn" title="Remove" onclick="removeFileRow(this)"><svg width="14" height="14"><use href="#i-trash"/></svg></button>
-                </div>
-
-                <div class="file-row">
-                  <div class="file-row-icon" style="background:var(--success-50);color:var(--success)"><svg width="14" height="14"><use href="#i-check"/></svg></div>
-                  <div class="file-row-main">
-                    <div class="file-row-top">
-                      <select class="form-select file-type-select"><option>CR Tracker</option><option selected>Compliance Report</option><option>Security Report</option><option>Rework Report</option><option>Test Coverage</option><option>Custom</option></select>
-                      <input class="form-input file-path-input" value="reports/compliance.md" />
-                    </div>
-                    <div class="file-row-bot">
-                      <span class="badge badge-success" style="font-size:11px"><span class="status-dot green"></span>Parsed · 8 checks · 3 min ago</span>
-                      <a href="#" class="text-xs" onclick="event.preventDefault();openFilePreview('compliance')">Preview</a>
-                    </div>
-                  </div>
-                  <button class="icon-btn" title="Remove" onclick="removeFileRow(this)"><svg width="14" height="14"><use href="#i-trash"/></svg></button>
-                </div>
-
-                <div class="file-row">
-                  <div class="file-row-icon" style="background:var(--danger-50);color:var(--danger)"><svg width="14" height="14"><use href="#i-shield"/></svg></div>
-                  <div class="file-row-main">
-                    <div class="file-row-top">
-                      <select class="form-select file-type-select"><option>CR Tracker</option><option>Compliance Report</option><option selected>Security Report</option><option>Rework Report</option><option>Test Coverage</option><option>Custom</option></select>
-                      <input class="form-input file-path-input" value="reports/security-scan.md" />
-                    </div>
-                    <div class="file-row-bot">
-                      <span class="badge badge-warning" style="font-size:11px"><span class="status-dot amber"></span>Parsed · 2 high · 1 critical · 3 min ago</span>
-                      <a href="#" class="text-xs" onclick="event.preventDefault();openFilePreview('security')">Preview</a>
-                    </div>
-                  </div>
-                  <button class="icon-btn" title="Remove" onclick="removeFileRow(this)"><svg width="14" height="14"><use href="#i-trash"/></svg></button>
-                </div>
-
-                <div class="file-row">
-                  <div class="file-row-icon" style="background:var(--warning-50);color:var(--warning)"><svg width="14" height="14"><use href="#i-refresh"/></svg></div>
-                  <div class="file-row-main">
-                    <div class="file-row-top">
-                      <select class="form-select file-type-select"><option>CR Tracker</option><option>Compliance Report</option><option>Security Report</option><option selected>Rework Report</option><option>Test Coverage</option><option>Custom</option></select>
-                      <input class="form-input file-path-input" value="reports/rework.md" />
-                    </div>
-                    <div class="file-row-bot">
-                      <span class="badge badge-danger" style="font-size:11px"><span class="status-dot red"></span>File not found · last seen 2 days ago</span>
-                      <a href="#" class="text-xs">Retry</a>
-                    </div>
-                  </div>
-                  <button class="icon-btn" title="Remove" onclick="removeFileRow(this)"><svg width="14" height="14"><use href="#i-trash"/></svg></button>
-                </div>
-              </div>
-
-              <button class="btn btn-default btn-sm mt-2" onclick="addFileRow()"><svg><use href="#i-plus"/></svg> Add file</button>
-              <div class="form-help">Files are read on every sync. Each file type drives a different chart on the project detail page.</div>
+            <div class="text-xs muted mt-2" style="padding:var(--sp-3);background:var(--gray-50);border:1px solid var(--gray-100);border-radius:var(--r-md)">
+              <strong style="color:var(--gray-900)">What Trackwise reads from GitHub:</strong> milestones, sprint labels, and the blocked label only. CR data, compliance, security, and forensic records are stored in Trackwise — see Project Detail → Forensic / CRs.
             </div>
           </div>
         </div>
@@ -2187,8 +2233,8 @@ table.tbl { width: 100%; border-collapse: collapse; }
           <div class="card-header"><div class="card-title">Alert Thresholds</div></div>
           <div class="card-body">
             <div class="form-row">
-              <div class="form-group"><label class="form-label">At Risk velocity (%)</label><input class="form-input" type="number" value="70" /><div class="form-help">% of avg velocity</div></div>
-              <div class="form-group"><label class="form-label">Behind velocity (%)</label><input class="form-input" type="number" value="50" /></div>
+              <div class="form-group"><label class="form-label">At Risk burn-rate band (%)</label><input class="form-input" type="number" value="-10" /><div class="form-help">Story+bug count vs ideal · default −10%</div></div>
+              <div class="form-group"><label class="form-label">Behind burn-rate band (%)</label><input class="form-input" type="number" value="-25" /><div class="form-help">Default −25% per PRD §12.2</div></div>
             </div>
             <div class="form-row">
               <div class="form-group"><label class="form-label">Pending hours threshold</label><input class="form-input" type="number" value="30" /><div class="form-help">In hours, across open CRs</div></div>
@@ -2241,7 +2287,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
         <div class="notif-icon amber"><svg><use href="#i-alert"/></svg></div>
         <div class="notif-content">
           <div class="notif-title">Velocity below threshold</div>
-          <div class="notif-text">Customer Portal Revamp · Sprint 6 · 28pts (70% threshold)</div>
+          <div class="notif-text">Customer Portal Revamp · sprint-6 · 9 stories completed (At Risk band)</div>
           <div class="notif-time">9:14 AM</div>
         </div>
       </div>
@@ -2261,7 +2307,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
         <div class="notif-icon blue"><svg><use href="#i-info"/></svg></div>
         <div class="notif-content">
           <div class="notif-title">CR-010 converted to scope</div>
-          <div class="notif-text">Customer Portal Revamp · 22h · billable</div>
+          <div class="notif-text">Customer Portal Revamp · 22h impact</div>
           <div class="notif-time">11:08 AM</div>
         </div>
       </div>
@@ -2270,7 +2316,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
         <div class="notif-icon green"><svg><use href="#i-check"/></svg></div>
         <div class="notif-content">
           <div class="notif-title">Sprint 5 closed on time</div>
-          <div class="notif-text">EHR Integration · 38pts delivered, velocity stable</div>
+          <div class="notif-text">EHR Integration · 12 stories + 4 bugs delivered, on-track band</div>
           <div class="notif-time">5:00 PM</div>
         </div>
       </div>
@@ -2587,7 +2633,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
       </div>
       <div class="activity-item">
         <div class="activity-dot" style="background:var(--primary)"></div>
-        <div style="flex:1"><div class="text-sm">CR-010 converted (22h, billable)</div><div class="text-xs muted">Apr 18, 2026</div></div>
+        <div style="flex:1"><div class="text-sm">CR-010 converted to scope (22h impact)</div><div class="text-xs muted">Apr 18, 2026</div></div>
       </div>
       <div class="activity-item">
         <div class="activity-dot" style="background:var(--gray-400)"></div>
@@ -2631,7 +2677,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
     <div class="modal-body">
       <div style="background:var(--info-50);border:1px solid #cffafe;border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);font-size:13px;color:var(--info);margin-bottom:var(--sp-4);display:flex;gap:var(--sp-2);align-items:flex-start">
         <svg width="16" height="16" style="flex-shrink:0;margin-top:2px"><use href="#i-info"/></svg>
-        <div>The CR Summary is normally parsed from <code style="font-family:var(--font-mono)">cr-tracker.md</code>. Manual override should only be used when the tracker is unavailable.</div>
+        <div>The CR Summary is derived automatically from CR records logged in Trackwise. Use this dialog only to record a one-off correction or an out-of-band adjustment, with a note explaining why.</div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Total CRs</label><input class="form-input" type="number" value="14" /></div>
@@ -2748,42 +2794,6 @@ table.tbl { width: 100%; border-collapse: collapse; }
     <div class="modal-foot">
       <button class="btn btn-default" onclick="closeModal('modal-add-employee')">Cancel</button>
       <button class="btn btn-primary" onclick="closeModal('modal-add-employee');showToast('Employee added','success')">Add</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════
-     FILE PREVIEW MODAL — renders parsed + raw views of a tracked file
-═══════════════════════════════════════════════════════════════ -->
-<div id="modal-file-preview" class="modal-overlay">
-  <div class="modal lg" style="max-width:880px" onclick="event.stopPropagation()">
-    <div class="modal-head">
-      <div>
-        <div class="modal-title" id="fp-title">File Preview</div>
-        <div class="text-xs muted mt-2" id="fp-path" style="font-family:var(--font-mono)">docs/cr-tracker.md</div>
-      </div>
-      <button class="close-btn" onclick="closeModal('modal-file-preview')"><svg width="16" height="16"><use href="#i-x"/></svg></button>
-    </div>
-    <div class="modal-body" style="padding:0">
-      <div class="tabs" style="margin:0;padding:0 var(--sp-5)">
-        <div class="tab active" onclick="switchTab('fp', 'parsed', this)">Parsed</div>
-        <div class="tab" onclick="switchTab('fp', 'raw', this)">Raw markdown</div>
-      </div>
-
-      <!-- Parsed view -->
-      <div class="tab-pane active" data-tabpane="fp-parsed" style="padding:var(--sp-5)">
-        <div id="fp-parsed-body"></div>
-      </div>
-
-      <!-- Raw view -->
-      <div class="tab-pane" data-tabpane="fp-raw" style="padding:var(--sp-5)">
-        <pre id="fp-raw-body" style="background:var(--gray-900);color:#e5e7eb;padding:var(--sp-4);border-radius:var(--r-md);font-family:var(--font-mono);font-size:12px;line-height:1.6;overflow-x:auto;max-height:480px;overflow-y:auto;white-space:pre"></pre>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <span class="text-xs muted" style="margin-right:auto" id="fp-meta">Last read 3 min ago · 142 lines</span>
-      <button class="btn btn-default" onclick="closeModal('modal-file-preview')">Close</button>
-      <a class="btn btn-default" id="fp-github-link" href="#" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg> Open in GitHub</a>
     </div>
   </div>
 </div>
@@ -3019,255 +3029,106 @@ function openManageClient(name, industry, projectCount, hours, added, status) {
   openDrawer('drawer-manage-client');
 }
 
-/* ── FILE PREVIEW MODAL ──────────────────────────── */
-const FILE_PREVIEWS = {
-  'cr-tracker': {
-    title: 'CR Tracker — Customer Portal Revamp',
-    path:  'docs/cr-tracker.md',
-    githubUrl: 'https://github.com/acme/portal-revamp/blob/main/docs/cr-tracker.md',
-    meta:  'Last read 3 min ago · 142 lines · 14 entries',
-    raw: `# CR Tracker — Customer Portal Revamp
-
-Project Code  : TRW-ACP
-Last Updated  : 2026-05-05
-
----
-
-## Totals
-
-| Category                  | Count | Hours |
-|---------------------------|-------|-------|
-| Total CRs Logged          | 14    | 124h  |
-| Absorbed (delivered free) | 5     | 24h   |
-| Converted (billed)        | 4     | 54h   |
-| Pending (decision due)    | 3     | 38h   |
-| Removed                   | 2     | 8h    |
-
----
-
-## All CRs
-
-| CR ID  | Date       | Run | Sprint   | Epic  | Story  | Deviation Type | Description                | Decision  | Hours | Status    |
-|--------|------------|-----|----------|-------|--------|----------------|----------------------------|-----------|-------|-----------|
-| CR-014 | 2026-05-04 | R3  | sprint-7 | EP-04 | ST-031 | Scope          | Add SSO via Okta           | —         | 16h   | Pending   |
-| CR-013 | 2026-05-02 | R3  | sprint-7 | EP-05 | ST-029 | Scope          | Custom branding theme      | —         | 12h   | Pending   |
-| CR-012 | 2026-04-28 | R3  | sprint-7 | EP-06 | ST-027 | Scope          | Bulk import via CSV        | —         | 10h   | Pending   |
-| CR-011 | 2026-04-22 | R3  | sprint-6 | EP-02 | ST-019 | Polish         | Mobile responsive tweaks   | Absorb    | 4h    | Absorbed  |
-| CR-010 | 2026-04-18 | R3  | sprint-6 | EP-01 | ST-014 | Scope          | Admin role split           | Convert   | 22h   | Converted |
-| CR-009 | 2026-04-12 | R2  | sprint-5 | EP-08 | ST-046 | Scope          | Audit log retention 7y     | Remove    | 8h    | Removed   |
-| CR-008 | 2026-04-09 | R2  | sprint-5 | EP-03 | ST-022 | Scope          | Activity timeline          | Absorb    | 14h   | Absorbed  |
-| CR-007 | 2026-04-04 | R2  | sprint-5 | EP-07 | ST-038 | Scope          | Slack webhook integration  | Convert   | 18h   | Converted |
-| CR-006 | 2026-03-30 | R2  | sprint-4 | EP-02 | ST-016 | Polish         | Empty state illustrations  | Absorb    | 3h    | Absorbed  |
-| CR-005 | 2026-03-25 | R2  | sprint-4 | EP-04 | ST-024 | Scope          | 2FA via authenticator app  | Convert   | 8h    | Converted |
-| CR-004 | 2026-03-21 | R1  | sprint-3 | EP-05 | ST-028 | Polish         | Dark mode preference       | Absorb    | 2h    | Absorbed  |
-| CR-003 | 2026-03-15 | R1  | sprint-3 | EP-06 | ST-033 | Scope          | Saved filter presets       | Remove    | 0h    | Removed   |
-| CR-002 | 2026-03-12 | R1  | sprint-2 | EP-01 | ST-007 | Polish         | Tooltip rework             | Absorb    | 1h    | Absorbed  |
-| CR-001 | 2026-03-08 | R1  | sprint-2 | EP-03 | ST-021 | Scope          | Export to PDF              | Convert   | 6h    | Converted |
-`,
-    parsed: 'cr-tracker', // tells renderer which template
-  },
-  'compliance': {
-    title: 'Compliance Report — Customer Portal Revamp',
-    path:  'reports/compliance.md',
-    githubUrl: 'https://github.com/acme/portal-revamp/blob/main/reports/compliance.md',
-    meta:  'Last read 3 min ago · 38 lines · 8 / 8 checks pass',
-    raw: `# Compliance Report — Customer Portal Revamp
-
-Last Updated : 2026-05-05
-Run          : R3 / Sprint 7
-
-## Checks
-
-| Area     | Check                          | Status | Last Verified |
-|----------|--------------------------------|--------|---------------|
-| Auth     | MFA enforced for admin users   | PASS   | 2026-05-05    |
-| Auth     | Session timeout ≤ 30 min       | PASS   | 2026-05-05    |
-| Data     | At-rest encryption (AES-256)   | PASS   | 2026-05-05    |
-| Data     | PII redacted in logs           | PASS   | 2026-05-05    |
-| API      | TLS 1.2+ enforced              | PASS   | 2026-05-05    |
-| Logs     | Audit log retention ≥ 1 year   | PASS   | 2026-05-05    |
-| Audit    | Change history per record      | PASS   | 2026-05-05    |
-| RBAC     | Role separation enforced       | PASS   | 2026-05-05    |
-`,
-    parsed: 'compliance',
-  },
-  'security': {
-    title: 'Security Scan Report — Customer Portal Revamp',
-    path:  'reports/security-scan.md',
-    githubUrl: 'https://github.com/acme/portal-revamp/blob/main/reports/security-scan.md',
-    meta:  'Last read 3 min ago · 86 lines · 1 critical · 2 high',
-    raw: `# Security Scan Report — Customer Portal Revamp
-
-Scanner      : Snyk + npm audit
-Last Updated : 2026-05-05
-Branch       : main @ a3f1e9c
-
-## Summary
-
-| Severity | Count |
-|----------|-------|
-| Critical | 1     |
-| High     | 2     |
-| Medium   | 5     |
-| Low      | 12    |
-
-## Findings
-
-| ID         | Severity | Package           | CVE             | Fix Available |
-|------------|----------|-------------------|-----------------|---------------|
-| SNYK-12842 | Critical | lodash@4.17.20    | CVE-2021-23337  | yes (4.17.21) |
-| SNYK-09114 | High     | axios@0.21.1      | CVE-2021-3749   | yes (0.21.4)  |
-| SNYK-09887 | High     | jsonwebtoken@8.5.1| CVE-2022-23529  | yes (9.0.0)   |
-`,
-    parsed: 'security',
-  },
+/* ── SPRINT HEALTH (EP-10) ────────────────────────── */
+const SH_SPRINT_DATA = {
+  'sprint-1': { window: 'Mar 03 – Mar 17, 2026', planned: 8,  completed: 7,  bugsLogged: 2, bugsResolved: 2, carryStories: 1, carryBugs: 0, carryEpics: 1, pulledIn: 0, epics: [['EP-01','Foundation & Auth',8]] },
+  'sprint-2': { window: 'Mar 17 – Mar 31, 2026', planned: 10, completed: 9,  bugsLogged: 3, bugsResolved: 3, carryStories: 1, carryBugs: 0, carryEpics: 1, pulledIn: 1, epics: [['EP-01','Foundation & Auth',5],['EP-03','Client & Project Dashboard',5]] },
+  'sprint-3': { window: 'Mar 31 – Apr 14, 2026', planned: 12, completed: 10, bugsLogged: 4, bugsResolved: 3, carryStories: 2, carryBugs: 1, carryEpics: 2, pulledIn: 1, epics: [['EP-03','Client & Project Dashboard',6],['EP-05','Forensic',6]] },
+  'sprint-4': { window: 'Apr 14 – Apr 28, 2026', planned: 11, completed: 11, bugsLogged: 2, bugsResolved: 2, carryStories: 0, carryBugs: 0, carryEpics: 0, pulledIn: 2, epics: [['EP-02','People',4],['EP-04','Notifications',7]] },
+  'sprint-5': { window: 'Apr 14 – Apr 28, 2026', planned: 13, completed: 10, bugsLogged: 5, bugsResolved: 4, carryStories: 3, carryBugs: 1, carryEpics: 2, pulledIn: 0, epics: [['EP-04','Notifications',7],['EP-07','Audit',6]] },
+  'sprint-6': { window: 'Mar 31 – Apr 14, 2026', planned: 14, completed: 9,  bugsLogged: 6, bugsResolved: 4, carryStories: 5, carryBugs: 2, carryEpics: 3, pulledIn: 3, epics: [['EP-01','Foundation & Auth',4],['EP-02','People',5],['EP-08','GitHub Sync',5]] },
+  'sprint-7': { window: 'Apr 14 – Apr 28, 2026', planned: 15, completed: 12, bugsLogged: 4, bugsResolved: 3, carryStories: 3, carryBugs: 1, carryEpics: 2, pulledIn: 2, epics: [['EP-01','Foundation & Auth',5],['EP-04','Notifications',6],['EP-06','Reporting',4]] },
+  'sprint-8': { window: 'Apr 28 – May 12, 2026 · current', planned: 14, completed: 3,  bugsLogged: 2, bugsResolved: 1, carryStories: null, carryBugs: null, carryEpics: null, pulledIn: 4, epics: [['EP-04','Notifications',5],['EP-06','Reporting',5],['EP-09','Project Health',4]] },
 };
 
-function openFilePreview(key) {
-  const data = FILE_PREVIEWS[key];
-  if (!data) { showToast('No preview available for this file type','warn'); return; }
-
-  $('#fp-title').textContent = data.title;
-  $('#fp-path').textContent  = data.path;
-  $('#fp-meta').textContent  = data.meta;
-  $('#fp-github-link').href  = data.githubUrl;
-  $('#fp-raw-body').textContent = data.raw;
-
-  // Reset to Parsed tab
-  const parsedTab = $('#modal-file-preview .tabs .tab');
-  switchTab('fp', 'parsed', parsedTab);
-
-  // Render parsed body based on file type
-  $('#fp-parsed-body').innerHTML = renderParsedView(data.parsed);
-
-  openModal('modal-file-preview');
-}
-
-function renderParsedView(kind) {
-  if (kind === 'cr-tracker') {
-    return `
-      <div class="card-grid mb-4" style="grid-template-columns:repeat(5,1fr);gap:var(--sp-2)">
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Total</div><div class="kpi-value" style="font-size:22px">14</div><div class="kpi-foot">124h</div></div>
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Absorbed</div><div class="kpi-value" style="font-size:22px;color:var(--success)">5</div><div class="kpi-foot">24h</div></div>
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Converted</div><div class="kpi-value" style="font-size:22px;color:var(--primary)">4</div><div class="kpi-foot">54h</div></div>
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Pending</div><div class="kpi-value" style="font-size:22px;color:var(--warning)">3</div><div class="kpi-foot">38h</div></div>
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Removed</div><div class="kpi-value" style="font-size:22px" class="muted">2</div><div class="kpi-foot">8h</div></div>
-      </div>
-
-      <div class="text-xs muted mb-2" style="font-weight:600;text-transform:uppercase;letter-spacing:.05em">All CRs (14)</div>
-      <div class="table-wrap" style="max-height:340px;overflow-y:auto">
-        <table class="tbl">
-          <thead><tr><th>CR ID</th><th>Date</th><th>Sprint</th><th>Description</th><th>Hours</th><th>Status</th></tr></thead>
-          <tbody>
-            ${[
-              ['CR-014','2026-05-04','sprint-7','Add SSO via Okta','16h','Pending'],
-              ['CR-013','2026-05-02','sprint-7','Custom branding theme','12h','Pending'],
-              ['CR-012','2026-04-28','sprint-7','Bulk import via CSV','10h','Pending'],
-              ['CR-011','2026-04-22','sprint-6','Mobile responsive tweaks','4h','Absorbed'],
-              ['CR-010','2026-04-18','sprint-6','Admin role split','22h','Converted'],
-              ['CR-009','2026-04-12','sprint-5','Audit log retention 7y','8h','Removed'],
-              ['CR-008','2026-04-09','sprint-5','Activity timeline','14h','Absorbed'],
-              ['CR-007','2026-04-04','sprint-5','Slack webhook integration','18h','Converted'],
-              ['CR-006','2026-03-30','sprint-4','Empty state illustrations','3h','Absorbed'],
-              ['CR-005','2026-03-25','sprint-4','2FA via authenticator app','8h','Converted'],
-              ['CR-004','2026-03-21','sprint-3','Dark mode preference','2h','Absorbed'],
-              ['CR-003','2026-03-15','sprint-3','Saved filter presets','0h','Removed'],
-              ['CR-002','2026-03-12','sprint-2','Tooltip rework','1h','Absorbed'],
-              ['CR-001','2026-03-08','sprint-2','Export to PDF','6h','Converted'],
-            ].map(r => `<tr><td class="tbl-cell-strong">${r[0]}</td><td>${r[1]}</td><td style="font-family:var(--font-mono);font-size:12px">${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${crStatusBadge(r[5])}</td></tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
+function shSelectSprint(value) {
+  const overall = $('#sh-view-overall');
+  const sprint  = $('#sh-view-sprint');
+  if (value === 'overall') {
+    overall.style.display = '';
+    sprint.style.display  = 'none';
+    return;
   }
+  const data = SH_SPRINT_DATA[value];
+  if (!data) return;
+  overall.style.display = 'none';
+  sprint.style.display  = '';
 
-  if (kind === 'compliance') {
-    const checks = [
-      ['Auth','MFA enforced for admin users','PASS'],
-      ['Auth','Session timeout ≤ 30 min','PASS'],
-      ['Data','At-rest encryption (AES-256)','PASS'],
-      ['Data','PII redacted in logs','PASS'],
-      ['API','TLS 1.2+ enforced','PASS'],
-      ['Logs','Audit log retention ≥ 1 year','PASS'],
-      ['Audit','Change history per record','PASS'],
-      ['RBAC','Role separation enforced','PASS'],
-    ];
-    return `
-      <div class="flex items-center gap-3 mb-4">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--success-100);color:var(--success);display:flex;align-items:center;justify-content:center"><svg width="22" height="22"><use href="#i-check"/></svg></div>
-        <div>
-          <div class="text-strong" style="font-size:18px">8 / 8 checks pass</div>
-          <div class="text-xs muted">All compliance checks current as of 2026-05-05</div>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="tbl">
-          <thead><tr><th>Area</th><th>Check</th><th>Status</th><th>Last verified</th></tr></thead>
-          <tbody>${checks.map(c => `<tr><td><span class="badge badge-gray">${c[0]}</span></td><td class="tbl-cell-strong">${c[1]}</td><td><span class="badge badge-success"><span class="status-dot green"></span>${c[2]}</span></td><td>2026-05-05</td></tr>`).join('')}</tbody>
-        </table>
-      </div>
-    `;
-  }
+  // Title + window
+  $('#sh-sprint-title').textContent  = `Sprint health — ${value}`;
+  $('#sh-sprint-window').textContent = `Window: ${data.window}`;
 
-  if (kind === 'security') {
-    return `
-      <div class="card-grid mb-4" style="grid-template-columns:repeat(4,1fr);gap:var(--sp-2)">
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Critical</div><div class="kpi-value" style="font-size:22px;color:var(--danger)">1</div></div>
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">High</div><div class="kpi-value" style="font-size:22px;color:var(--warning)">2</div></div>
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Medium</div><div class="kpi-value" style="font-size:22px">5</div></div>
-        <div class="kpi" style="padding:var(--sp-3)"><div class="kpi-label" style="margin-bottom:2px">Low</div><div class="kpi-value" style="font-size:22px" class="muted">12</div></div>
-      </div>
-      <div class="text-xs muted mb-2" style="font-weight:600;text-transform:uppercase;letter-spacing:.05em">Findings</div>
-      <div class="table-wrap">
-        <table class="tbl">
-          <thead><tr><th>ID</th><th>Severity</th><th>Package</th><th>CVE</th><th>Fix</th></tr></thead>
-          <tbody>
-            <tr><td class="tbl-cell-strong">SNYK-12842</td><td><span class="badge badge-danger">Critical</span></td><td style="font-family:var(--font-mono);font-size:12px">lodash@4.17.20</td><td style="font-family:var(--font-mono);font-size:12px">CVE-2021-23337</td><td><span class="badge badge-success">4.17.21</span></td></tr>
-            <tr><td class="tbl-cell-strong">SNYK-09114</td><td><span class="badge badge-warning">High</span></td><td style="font-family:var(--font-mono);font-size:12px">axios@0.21.1</td><td style="font-family:var(--font-mono);font-size:12px">CVE-2021-3749</td><td><span class="badge badge-success">0.21.4</span></td></tr>
-            <tr><td class="tbl-cell-strong">SNYK-09887</td><td><span class="badge badge-warning">High</span></td><td style="font-family:var(--font-mono);font-size:12px">jsonwebtoken@8.5.1</td><td style="font-family:var(--font-mono);font-size:12px">CVE-2022-23529</td><td><span class="badge badge-success">9.0.0</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    `;
-  }
-  return '<div class="text-xs muted">No structured preview available for this file type. See the Raw tab.</div>';
-}
-
-function crStatusBadge(s) {
-  const m = {
-    'Pending':   '<span class="badge badge-warning">Pending</span>',
-    'Absorbed':  '<span class="badge badge-success">Absorbed</span>',
-    'Converted': '<span class="badge badge-primary">Converted</span>',
-    'Removed':   '<span class="badge badge-gray">Removed</span>',
-  };
-  return m[s] || s;
-}
-
-/* ── TRACKED FILES (multi-file editor) ──────────── */
-function addFileRow() {
-  const list = $('#tracked-files');
-  const row = document.createElement('div');
-  row.className = 'file-row';
-  row.innerHTML = `
-    <div class="file-row-icon" style="background:var(--gray-100);color:var(--gray-500)"><svg width="14" height="14"><use href="#i-link"/></svg></div>
-    <div class="file-row-main">
-      <div class="file-row-top">
-        <select class="form-select file-type-select"><option>CR Tracker</option><option>Compliance Report</option><option>Security Report</option><option>Rework Report</option><option>Test Coverage</option><option selected>Custom</option></select>
-        <input class="form-input file-path-input" placeholder="path/to/file.md" />
-      </div>
-      <div class="file-row-bot">
-        <span class="badge badge-gray" style="font-size:11px"><span class="status-dot gray"></span>Not yet read</span>
-        <a href="#" class="text-xs">Validate</a>
-      </div>
+  // Block 1 — Epics & Stories
+  $('#sh-epics-count').textContent = data.epics.length;
+  $('#sh-epics-list').innerHTML = data.epics.map(([id, name, count]) => `
+    <div class="sh-mini-list-row">
+      <span class="lbl"><code>${id}</code> ${name}</span>
+      <span class="val">${count} stories</span>
     </div>
-    <button class="icon-btn" title="Remove" onclick="removeFileRow(this)"><svg width="14" height="14"><use href="#i-trash"/></svg></button>
+  `).join('');
+
+  // Block 2 — Planned vs Completed
+  const pct = data.planned > 0 ? Math.round((data.completed / data.planned) * 100) : 0;
+  const isCurrent = value === 'sprint-8';
+  $('#sh-stories-completed').textContent = data.completed;
+  $('#sh-stories-planned').textContent   = data.planned;
+  const deltaEl = $('#sh-stories-delta');
+  deltaEl.textContent = pct + '%';
+  deltaEl.className = 'sh-delta ' + (pct >= 90 ? 'pos' : pct >= 70 ? 'zero' : 'neg');
+
+  // Block 2 mini-list
+  const closedLabel = isCurrent ? 'Closed so far' : 'Closed by sprint end';
+  sprint.querySelector('.sh-block:nth-child(2) .sh-mini-list').innerHTML = `
+    <div class="sh-mini-list-row"><span class="lbl">Planned at sprint start</span><span class="val">${data.planned}</span></div>
+    <div class="sh-mini-list-row"><span class="lbl">Added mid-sprint</span><span class="val">+0</span></div>
+    <div class="sh-mini-list-row"><span class="lbl">Removed mid-sprint</span><span class="val">−0</span></div>
+    <div class="sh-mini-list-row"><span class="lbl">${closedLabel}</span><span class="val">${data.completed}</span></div>
   `;
-  list.appendChild(row);
-  row.querySelector('input').focus();
-}
-function removeFileRow(btn) {
-  const row = btn.closest('.file-row');
-  if (row) row.remove();
+
+  // Block 3 — Bugs Logged vs Resolved
+  const bugsBlock = sprint.querySelector('.sh-block:nth-child(3)');
+  bugsBlock.querySelector('.sh-stat-row').innerHTML = `
+    <span class="sh-stat-num">${data.bugsResolved}</span>
+    <span class="sh-stat-sep">/</span>
+    <span class="sh-stat-num muted">${data.bugsLogged}</span>
+    ${(() => {
+      const net = data.bugsResolved - data.bugsLogged;
+      if (net > 0) return `<span class="sh-delta pos">+${net} net</span>`;
+      if (net < 0) return `<span class="sh-delta neg">${net} net</span>`;
+      return `<span class="sh-delta zero">net 0</span>`;
+    })()}
+  `;
+  bugsBlock.querySelector('.sh-mini-list').innerHTML = `
+    <div class="sh-mini-list-row"><span class="lbl">Logged (created in window)</span><span class="val">${data.bugsLogged}</span></div>
+    <div class="sh-mini-list-row"><span class="lbl">Resolved (closed in window)</span><span class="val">${data.bugsResolved}</span></div>
+    <div class="sh-mini-list-row"><span class="lbl">Open at sprint end</span><span class="val">${Math.max(0, data.bugsLogged - data.bugsResolved)}</span></div>
+  `;
+
+  // Block 4 — Carryover
+  const carryBlock = sprint.querySelector('.sh-block:nth-child(4)');
+  if (isCurrent) {
+    carryBlock.querySelector('.sh-stat-row').innerHTML = `
+      <span class="sh-stat-num muted">—</span>
+      <span class="text-xs muted">Sprint hasn't ended yet</span>
+    `;
+    carryBlock.querySelector('.sh-mini-list').innerHTML = `
+      <div class="sh-mini-list-row"><span class="lbl">Stories at risk of carrying</span><span class="val">${Math.max(0, data.planned - data.completed)}</span></div>
+      <div class="sh-mini-list-row"><span class="lbl">Bugs still open</span><span class="val">${Math.max(0, data.bugsLogged - data.bugsResolved)}</span></div>
+      <div class="sh-mini-list-row" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--gray-200)"><span class="lbl">Pulled forward into this sprint</span><span class="val">${data.pulledIn}</span></div>
+    `;
+  } else {
+    const total = (data.carryStories || 0) + (data.carryBugs || 0);
+    carryBlock.querySelector('.sh-stat-row').innerHTML = `
+      <span class="sh-stat-num">${total}</span>
+      <span class="text-xs muted">items leaked to next sprint</span>
+    `;
+    carryBlock.querySelector('.sh-mini-list').innerHTML = `
+      <div class="sh-mini-list-row"><span class="lbl">Stories carried</span><span class="val">${data.carryStories}</span></div>
+      <div class="sh-mini-list-row"><span class="lbl">Bugs carried</span><span class="val">${data.carryBugs}</span></div>
+      <div class="sh-mini-list-row"><span class="lbl">Epics partially in next sprint</span><span class="val">${data.carryEpics}</span></div>
+      <div class="sh-mini-list-row" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--gray-200)"><span class="lbl">Pulled forward into this sprint</span><span class="val">${data.pulledIn}</span></div>
+    `;
+  }
 }
 
 /* ── INIT ────────────────────────────────────────── */

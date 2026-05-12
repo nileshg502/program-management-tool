@@ -1,6 +1,6 @@
 # Session State
 
-**Last Updated:** 2026-05-11 (Session 9 — PM)
+**Last Updated:** 2026-05-12 (Session 10 — UX Designer)
 **Current Branch:** master
 **Total Delivered:** 0 points across 0 sprints
 
@@ -8,9 +8,89 @@
 
 ## Current State
 
-Session 9 (PM): new epic **EP-10 — Sprint Health** added with three stories (ST-061 API, ST-062 per-sprint UI, ST-063 consolidated Overall UI). Per-project sprint health view with sprint dropdown, four data blocks per sprint (Epics & Stories, Planned vs Completed, Bugs Logged vs Resolved, End-of-sprint Carryover). Sits underneath EP-09's Sprint Progress tile, not a replacement. Count-based only for v1.0; reuses ADR-011 cache layer with no new DB collections.
+Session 10 (UX): mockup brought back in line with PM decisions through Session 9. Two passes: (1) **drift cleanup** removed all UI that contradicted ADR-008 / EP-09 / EP-10 locks (sync UI, cr-tracker.md provenance, multi-file tracker, File Preview modal, billable copy, points-velocity, "issues" terminology); (2) **EP-10 Sprint Health UI built** as a new section under Project Detail → Overview with Overall consolidated view (default) and per-sprint 2×2 block grid (Epics & Stories, Planned vs Completed, Bugs Logged vs Resolved, End-of-sprint Carryover). Sprint dropdown wired up with live data switching for sprint-1 → sprint-8.
 
-Backlog now: **273 points / 63 stories / 10 epics.**
+Mockup: `design/mockups/trackwise-mockup.html` — 3138 lines (was 3277; net −139 after −509 cleanup + 370 added for Sprint Health).
+
+EP-09 Project Health Dashboard cockpit redesign (CR-by-origin tabs, Deviation running-balance, sprint scope dropdown) is **deferred** — gated on PM resolving 5 parked design questions (see Pending / Next Steps).
+
+Backlog unchanged: **273 points / 63 stories / 10 epics.**
+
+---
+
+## Changes Made This Session (Session 10 — UX)
+
+**1. Drift cleanup pass — DONE**
+
+Removed UI contradicting PM decisions through Session 9:
+
+- *S-03 Portfolio Dashboard* — "Sync all" button, sync bar, all 7 "Last sync N min ago" rows on project cards
+- *S-04 Project Detail* — "Sync now" button, sync bar, "From cr-tracker.md" badge on CR Summary card, "Source: cr-tracker.md" caption on CR tracker
+- *S-04 GitHub tab* — gutted entirely; removed tracked-files table + Compliance/Security/Rework visualisations + "Last sync result" card; replaced with "Connection" (sprint label / blocked label only) + "Mirrored from GitHub" (count of milestones / sprint labels / blocked stories) + boundary note explaining what Trackwise reads
+- *S-14 Project Settings → GitHub Integration* — removed sync interval dropdown, multi-file tracker repeater (4 file-row entries + Add file button); replaced with Sprint label pattern + Blocked label inputs + boundary note
+- *Modals* — File Preview modal (markup + 250 lines of JS data + CSS) removed entirely; Forensic CR Summary modal copy rewritten to drop cr-tracker.md parsing reference
+- *Notifications + Alert History* — "billable" / "billed" copy removed; "22h, billable" → "22h impact"; "Customer Portal Revamp · Sprint 6 · 28pts (70% threshold)" → "sprint-6 · 9 stories completed (At Risk band)"; "EHR Integration · 38pts delivered, velocity stable" → "12 stories + 4 bugs delivered, on-track band"
+- *Manage Client drawer Recent activity* — "CR-010 converted (22h, billable)" → "CR-010 converted to scope (22h impact)"
+- *Velocity / vocabulary* — Sprint Velocity KPI "42 pts/sprint" → Sprint throughput "14 stories · 6 bugs"; all 7 project-card "Velocity (last 3) X pts" → "Sprint completed (last 3) X stories · Y bugs"; Alert thresholds "At Risk velocity 70% / Behind 50%" → "burn-rate band −10% / −25%" matching PRD §12.2; "2 issues missing sprint labels" → "2 stories missing sprint labels"
+- *Sprint Progress KPI* — added carryover sub-line "+3 carried from sprint-6" per EP-09 lock
+- *CSS / JS* — removed `.sync-bar`, `.file-row*`, FILE_PREVIEWS / openFilePreview / renderParsedView / crStatusBadge / addFileRow / removeFileRow
+
+Net cleanup: −509 lines. No new screens, no design decisions — pure deletions and copy edits.
+
+**2. EP-10 Sprint Health UI — DONE (ST-062 + ST-063)**
+
+New section added at bottom of Project Detail → Overview tab, directly under "Recent milestones" card.
+
+- *Sprint selector bar* — sticky header row with "Sprint Health" title + dropdown
+- *Dropdown options* — `Overall` (default, selected) + `sprint-8 (current)` + sprint-7 → sprint-1, no cap
+- *Overall consolidated view (ST-063)* — single trend table, one row per sprint, columns: Stories planned / Stories completed / Bugs logged / Bugs resolved / Carryover; Totals row at bottom; current sprint shows `—` for carryover; footnote explains carryover definition
+- *Per-sprint view (ST-062)* — 2×2 grid with the four blocks from EP-10:
+  - Block 1 *Epics & Stories* — epic count + per-epic story breakdown list
+  - Block 2 *Planned vs Completed* — N/M counts + delta chip (color-coded ≥90% green / ≥70% gray / <70% red); epics row reads `—` with tooltip per PM Session 9 lock; mini-list shows planned/added/removed/closed
+  - Block 3 *Bugs Logged vs Resolved* — resolved/logged + net delta chip; mini-list shows logged/resolved/open + High/Critical breakdown
+  - Block 4 *End-of-sprint Carryover* — total carried + stories/bugs/epics breakdown + reverse-direction "pulled forward" line; current sprint swaps to "Sprint hasn't ended yet" with at-risk counts
+- *JS* — `shSelectSprint()` wired to dropdown `onchange`; `SH_SPRINT_DATA` populated for sprint-1 → sprint-8 with realistic counts; view swap is instant DOM toggle
+- *CSS* — new `.sh-*` classes: section / bar / body / grid / block / stat-row / delta / mini-list / overall trend table
+
+Net additions: +370 lines.
+
+**3. Drift items left as-is (deliberate, not in EP-10 scope)**
+
+These are EP-09 work, not EP-10 — flagged in Next Steps for a future session:
+- EP-09 Project Health Dashboard cockpit (CR-by-origin two-tab split, Deviation running-balance, sprint scope dropdown next to KPI tiles, QA section stub)
+- S-04 tab restructure (Forensic / CRs tab redundancy after EP-09 absorbs CR section)
+
+---
+
+## Decisions Made This Session (Session 10)
+
+**Sprint Health placement — DECIDED by UX**
+- Lives inside Project Detail → Overview tab, under Recent milestones (not a new top-level tab, not a new screen)
+- Sticky selector bar at top of section so dropdown stays visible while scrolling the four blocks
+- Default view is `Overall` per EP-10 PM lock — user must opt in to a specific sprint
+
+**Carryover semantics for current sprint — DECIDED by UX**
+- Current sprint shows `—` in the Overall table's carryover column (sprint hasn't ended, no leak yet possible)
+- In per-sprint view, current sprint swaps Block 4 from "leaked to next sprint" to "at-risk of carrying" with open-stories + open-bugs counts
+- Reasoning: showing 0 carryover for an in-flight sprint would be misleading; showing the at-risk projection is what PM actually needs
+
+**Cleanup scope split from new design scope — DECIDED by UX**
+- Cleanup (drift removal) shipped as one pass; EP-10 build shipped as a separate pass on the same file
+- EP-09 cockpit deferred — gated on PM resolving 5 parked design questions before pixels go down
+- Reasoning: mixing reversible deletions with forward design decisions makes either harder to review independently
+
+---
+
+## Drift audit findings (recorded for posterity)
+
+Pre-cleanup audit identified drift in three categories beyond the 4 known Session 7 carryovers:
+
+1. **ADR-008 violations** — sync UI in 4 places (S-03 button, S-03 sync bar, S-04 button, S-04 sync bar, project card Last sync rows ×7, Connection card Sync interval / Last sync rows, Last sync result card, S-14 Sync interval field) — all removed
+2. **cr-tracker.md provenance leaks** — CR Summary badge, CR tracker source caption, Forensic modal info banner — all rewritten as database-native
+3. **EP-09 / EP-10 vocabulary lock violations** — points-based velocity in 9 places, "billable"/"billed" in 3 places, "issues" terminology in sprint context, "70% / 50% velocity" thresholds vs PRD §12.2's "−10% / −25% burn-rate" — all corrected
+
+Sprint label pattern (`sprint-N`) audit confirmed clean — no other patterns present in mockup.
+User Management (S-12 + S-15) and Manage Client drawer (S-16) confirmed already in line with ST-050 → ST-057 — no edits needed.
 
 ---
 
@@ -262,6 +342,7 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 | 7 | BA | 8 new stories (ST-050 → ST-057) covering user creation, manage-user, manage-client. ADR-003 reopen approved by PM. GitHub file reading rejected — ADR-007 needs update, mockup needs File Preview / multi-file removed |
 | 8 | PM + Architect | **PM half:** new epic EP-09 + 3 stories (ST-058 → ST-060), ADR-008 drafted, PRD Q1 + Q2 resolved (`sprint-N`, burn-rate 10/25), dashboard design (hours only, two CR tabs, sprint scope dropdown, deviation running-balance, carryover line), QA + Deviation schemas parked. **Architect half:** four new ADRs (ADR-009 Core Entities, ADR-010 Project Operations, ADR-011 GitHub Mirror Cache, ADR-012 Seeding Strategy). ADR-002 amended; ADR-008 Approved; ADR-007 Superseded; ADR-003 + ADR-004 amended. Canonical data dictionary rewritten with Mermaid ER diagram |
 | 9 | PM | New epic EP-10 Sprint Health + 3 stories (ST-061 API, ST-062 per-sprint UI, ST-063 consolidated Overall UI). Count-based metrics only for v1.0; reuses ADR-011 cache; sits under EP-09's Sprint Progress tile. PM defaults documented as assumptions inside the epic — sprint window date rule deferred to grooming |
+| 10 | UX Designer | Drift audit then two-pass mockup update. **Pass 1 cleanup (−509 lines):** removed all sync UI, cr-tracker.md provenance, multi-file tracker, File Preview modal + 250 lines of JS, billable copy, points-velocity in 9 places, "issues" terminology, Forensic modal cr-tracker reference. Replaced velocity thresholds with PRD §12.2 burn-rate bands. Added carryover sub-line on Sprint Progress KPI. **Pass 2 EP-10 build (+370 lines):** new Sprint Health section under Project Detail → Overview, sticky sprint selector with `Overall` default + sprint-1..8 options, Overall consolidated trend table (ST-063), per-sprint 2×2 block grid (ST-062) covering Epics & Stories / Planned vs Completed / Bugs Logged vs Resolved / End-of-sprint Carryover, fully wired with `shSelectSprint()` JS and live data switching. EP-09 cockpit deferred — gated on PM resolving 5 parked design questions |
 
 ---
 
@@ -274,11 +355,20 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 - **Verify ADR-004** — confirm no change needed (file reading rejected; original ADR holds) — carried over from Session 7
 - **Schema cleanup arising from ADR-008** — remove `cr_tracker_path` from `projects` collection, remove `sync_status` and `last_synced_at` from `cr_summaries`
 
-**UX actions (next UX session)**
-- Remove File Preview modal from `design/mockups/trackwise-mockup.html`
-- Remove multi-file tracker repeater from Project Settings → GitHub Integration; revert to no file path field at all (no `cr-tracker.md` reference anywhere)
-- Remove tracked-files table and related visualisations from Project Detail → GitHub tab; replace with API-driven views of CR Summary / compliance / security data sourced from Trackwise database
-- Update Manage Client drawer "Recent activity" mock data so it stops referencing CR-010 parsed from a file
+**UX actions completed in Session 10**
+- ~~Remove File Preview modal~~ — DONE
+- ~~Remove multi-file tracker repeater from Project Settings~~ — DONE (replaced with Sprint label / Blocked label inputs + boundary note)
+- ~~Remove tracked-files table and related visualisations from Project Detail → GitHub tab~~ — DONE (tab rebuilt as Connection + Mirrored from GitHub cards)
+- ~~Update Manage Client drawer "Recent activity"~~ — DONE
+- EP-10 Sprint Health UI (ST-062 per-sprint + ST-063 Overall) — DONE
+
+**UX actions (next UX session) — EP-09 Project Health Dashboard cockpit**
+- Redesign S-04 Overview tab as the EP-09 cockpit: KPI row with sprint scope dropdown (All-time / Last 3 default / Last 6 / Current / each past sprint), Sprint Progress + Milestone + QA stub + CR-by-origin two-tab section + Deviation section
+- CR section split — Deviated CRs tab (Absorbed/Converted/Pending/Removed) + Client-Requested CRs tab (Approved/Rejected/Pending/Delivered) per ST-058
+- Deviation section — three-column running-balance layout when single sprint selected; single-column for All-time; hours only
+- QA section — placeholder card with "Awaiting QA schema definition" note (PM-parked entity)
+- S-04 tab restructure — decide Forensic / CRs tab fate after cockpit absorbs CR section
+- **Gated on**: PM resolving 5 parked design questions (CR sub-tab placement, conversion rate metric, internal/regulatory CR treatment, work-item type label convention, epic display in sprint metrics) — see EP-09 epic "Design — locked vs parked"
 
 **PRD open questions**
 - ~~GitHub label convention for sprints~~ — **resolved 2026-05-08** (sprint-N, see PRD §12.1)

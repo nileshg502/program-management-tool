@@ -5,6 +5,7 @@
 **Priority:** P1
 **Points:** 5
 **Status:** Not Started
+**Last Updated:** 2026-05-12 (Session 10 — PM, references updated to file-driven model)
 
 ---
 
@@ -40,7 +41,8 @@ As a PM, when I land on Project Detail's Sprint Health section I want a consolid
 
 - [ ] **Loading** — skeleton table while the API call is pending
 - [ ] **Project has no sprints** — same empty state as ST-062 ("No sprints found…")
-- [ ] **GitHub unavailable with cold cache** — table renders any rows the cache still holds; rows that can't render show "—" cells; banner above the table reads "Some sprint data is currently unavailable — showing what we have"
+- [ ] **Sprint Health file missing** — same empty-state copy as ST-062
+- [ ] **Last ingestion failed** — same warning banner as ST-062, shown above the trend table
 
 ### Behaviour
 

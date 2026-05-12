@@ -1,6 +1,6 @@
 # Session State
 
-**Last Updated:** 2026-05-12 (Session 10 — UX Designer)
+**Last Updated:** 2026-05-12 (Session 10 — PM follow-up after UX)
 **Current Branch:** master
 **Total Delivered:** 0 points across 0 sprints
 
@@ -8,17 +8,62 @@
 
 ## Current State
 
-Session 10 (UX): mockup brought back in line with PM decisions through Session 9. Two passes: (1) **drift cleanup** removed all UI that contradicted ADR-008 / EP-09 / EP-10 locks (sync UI, cr-tracker.md provenance, multi-file tracker, File Preview modal, billable copy, points-velocity, "issues" terminology); (2) **EP-10 Sprint Health UI built** as a new section under Project Detail → Overview with Overall consolidated view (default) and per-sprint 2×2 block grid (Epics & Stories, Planned vs Completed, Bugs Logged vs Resolved, End-of-sprint Carryover). Sprint dropdown wired up with live data switching for sprint-1 → sprint-8.
+Session 10 had two halves on the same day:
 
-Mockup: `design/mockups/trackwise-mockup.html` — 3138 lines (was 3277; net −139 after −509 cleanup + 370 added for Sprint Health).
+**UX half (earlier):** mockup cleanup + EP-10 Sprint Health UI built (Overall trend table + per-sprint 2×2 block grid). UI shape — dropdown, Overall default, four blocks — remains correct and unaffected by the PM half below. Only empty-state copy needs a small update.
 
-EP-09 Project Health Dashboard cockpit redesign (CR-by-origin tabs, Deviation running-balance, sprint scope dropdown) is **deferred** — gated on PM resolving 5 parked design questions (see Pending / Next Steps).
+**PM half (this entry):** **EP-10 data source redesigned.** Sprint Health no longer derives from GitHub labels/milestones. New model: a per-project markdown file (`projects/<id>/sprint-health.md`) with four tables that mirror the future DB schema. Claude edits the file when the PM states sprint/story/bug events in chat sessions; Trackwise ingests the file into the DB; UI reads the DB. ADR-008 + ADR-011 are superseded for Sprint Health specifically (still hold for other GitHub-mirrored data — flagged for Architect).
+
+Scaffold file created: `projects/trackwise/sprint-health.md`. EP-10 epic and ST-061 rewritten. ST-062 / ST-063 lightly updated (empty-state copy, `multi_sprint_items` → `carryover_items`).
+
+Mockup: `design/mockups/trackwise-mockup.html` — UI shape unchanged from UX half; small copy update outstanding ("Add sprint-N label in GitHub" → "Start a sprint in a Claude session").
+
+EP-09 Project Health Dashboard cockpit redesign is still **deferred** — gated on PM resolving 5 parked design questions.
 
 Backlog unchanged: **273 points / 63 stories / 10 epics.**
 
 ---
 
-## Changes Made This Session (Session 10 — UX)
+## Changes Made This Session (Session 10 — PM, after UX half)
+
+**1. EP-10 data source redesigned — DONE**
+- File: `agile/epics/EP-10-sprint-health.md` rewritten
+- Sprint Health is no longer derived from GitHub. The ADR-008 / ADR-011 cache path is superseded for this feature
+- New source: `projects/<project-id>/sprint-health.md` — markdown file with four tables (Sprints, Epics, Stories, Bugs), each row = one future DB row
+- Update mechanism: PM (or active role) states a sprint/story/bug event in a Claude chat session ("Start Sprint 1", "ST-010 is done", "BUG-003 logged", etc.); Claude edits the file and commits to the repo
+- Trackwise ingests the file on a schedule (mechanism TBD — default 60s poll proposed); DB is a downstream projection of the file
+- File is the only write path; UI is read-only
+- Rationale: chat-driven model matches the actual workflow (projects Trackwise tracks don't use GitHub sprint labels); markdown mirror of DB lets non-technical readers audit/edit directly
+
+**2. Project scaffold file created — DONE**
+- File: `projects/trackwise/sprint-health.md`
+- Contents: header, update protocol table (statement → action mapping), four empty data tables with column headers, field-type reference
+- Format: Markdown tables, date-only, `—` for null
+- Layout: single file with four sections (Option A), not separate files per table
+
+**3. ST-061 rewritten — DONE**
+- Title: "Sprint Health read model and API" → "Sprint Health **file ingestion** and API"
+- New ACs: file parser, four DB collections (or one with type discriminator — Architect call), upsert logic, malformed-file handling, manual re-sync endpoint
+- Removed dependency on ADR-011 cache, ST-044, ST-045
+- Performance target tightened (no GitHub calls — pure DB read after ingestion)
+- Points unchanged (8)
+
+**4. ST-062 + ST-063 lightly updated — DONE**
+- Empty-state copy: "Add a `sprint-N` label in GitHub" → "A sprint is added when the PM starts one in a Claude session"
+- `multi_sprint_items` renamed to `carryover_items`
+- New error state for failed ingestion with retry link
+- Points unchanged (5 + 5)
+
+**5. Auto-memory added — DONE**
+- File: `memory/project_sprint_health_chat_protocol.md` + MEMORY.md index entry
+- Future Claude sessions will recognize PM statements as Sprint Health update triggers
+
+**6. Mockup copy follow-up (open)**
+- Mockup's EP-10 empty state still references GitHub sprint labels — needs the same one-line copy update from ST-062/063. Not done in this session; flagged for next UX touch-up
+
+---
+
+## Changes Made This Session (Session 10 — UX, earlier half)
 
 **1. Drift cleanup pass — DONE**
 
@@ -343,13 +388,23 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 | 8 | PM + Architect | **PM half:** new epic EP-09 + 3 stories (ST-058 → ST-060), ADR-008 drafted, PRD Q1 + Q2 resolved (`sprint-N`, burn-rate 10/25), dashboard design (hours only, two CR tabs, sprint scope dropdown, deviation running-balance, carryover line), QA + Deviation schemas parked. **Architect half:** four new ADRs (ADR-009 Core Entities, ADR-010 Project Operations, ADR-011 GitHub Mirror Cache, ADR-012 Seeding Strategy). ADR-002 amended; ADR-008 Approved; ADR-007 Superseded; ADR-003 + ADR-004 amended. Canonical data dictionary rewritten with Mermaid ER diagram |
 | 9 | PM | New epic EP-10 Sprint Health + 3 stories (ST-061 API, ST-062 per-sprint UI, ST-063 consolidated Overall UI). Count-based metrics only for v1.0; reuses ADR-011 cache; sits under EP-09's Sprint Progress tile. PM defaults documented as assumptions inside the epic — sprint window date rule deferred to grooming |
 | 10 | UX Designer | Drift audit then two-pass mockup update. **Pass 1 cleanup (−509 lines):** removed all sync UI, cr-tracker.md provenance, multi-file tracker, File Preview modal + 250 lines of JS, billable copy, points-velocity in 9 places, "issues" terminology, Forensic modal cr-tracker reference. Replaced velocity thresholds with PRD §12.2 burn-rate bands. Added carryover sub-line on Sprint Progress KPI. **Pass 2 EP-10 build (+370 lines):** new Sprint Health section under Project Detail → Overview, sticky sprint selector with `Overall` default + sprint-1..8 options, Overall consolidated trend table (ST-063), per-sprint 2×2 block grid (ST-062) covering Epics & Stories / Planned vs Completed / Bugs Logged vs Resolved / End-of-sprint Carryover, fully wired with `shSelectSprint()` JS and live data switching. EP-09 cockpit deferred — gated on PM resolving 5 parked design questions |
+| 10 | PM (follow-up) | **EP-10 data source flipped from GitHub-derived to chat-driven markdown file.** Created `projects/trackwise/sprint-health.md` scaffold with four tables (Sprints/Epics/Stories/Bugs) mirroring the DB. Rewrote EP-10 epic + ST-061. Lightly updated ST-062/063 (empty-state copy, `multi_sprint_items` → `carryover_items`). UX-built UI shape unchanged; only empty-state copy needs touch-up. ADR-008 + ADR-011 superseded for Sprint Health specifically — flagged for Architect. Saved chat-driven protocol to auto-memory |
 
 ---
 
 ## Pending / Next Steps
 
-**Architect actions (next Architect session)**
-- **Review and approve ADR-008** (Data Ownership and Sync Model) — drafted by PM in this session. Architect to validate cache strategy, confirm 60s TTL is workable, sign off as Approved
+**Architect actions (next Architect session) — Session 10 PM additions**
+
+- **Sprint Health DB collection schema** — define mirror of the four tables in `projects/<id>/sprint-health.md` (Sprints / Epics / Stories / Bugs). One collection per table is the PM-preferred shape; Architect may consolidate to a single collection with a type discriminator if there's a strong reason
+- **File ingestion mechanism** — pick poll vs commit webhook (default proposed: 60s poll for consistency with existing cadence). Define parser library, malformed-file behaviour, manual re-sync endpoint
+- **Partial supersession of ADR-008** — Sprint Health no longer follows the "GitHub is the source for sprint membership" clause. Update ADR-008 to scope this clause to the cr-tracker domain only, or draft a new ADR (ADR-013?) that records the file-as-source-of-truth model and points back to ADR-008 for everything else. ADR-008's general data ownership rule still holds
+- **Partial supersession of ADR-011** — the GitHub Mirror Cache for sprint membership is no longer needed for Sprint Health (it may still be useful for other features that consume sprint data, if any). Document this scope reduction in ADR-011 or in the new ADR
+- **EP-09 consistency follow-up** — EP-09's Project Health Dashboard sprint data still assumes the GitHub-cache model. After Sprint Health's file-driven model lands, decide whether EP-09 also reads from the file (or from the DB projection of it) for consistency. Capture in EP-09 epic or as an ADR
+
+**Architect actions (carried over from earlier sessions)**
+
+- **Review and approve ADR-008** (Data Ownership and Sync Model) — drafted by PM in Session 8. Note: now needs the partial-supersession amendment above before final approval
 - **Mark ADR-007 as Superseded by ADR-008** — its `cr-tracker.md` parsing path is no longer the implementation path. Document the supersession in ADR-007's Status field and add a pointer to ADR-008
 - **Amend ADR-003** — document that reset-password, disable/re-enable, delete user are in-app actions for v1.0 (was: Cognito console only) — carried over from Session 7
 - **Verify ADR-004** — confirm no change needed (file reading rejected; original ADR holds) — carried over from Session 7
@@ -361,6 +416,9 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 - ~~Remove tracked-files table and related visualisations from Project Detail → GitHub tab~~ — DONE (tab rebuilt as Connection + Mirrored from GitHub cards)
 - ~~Update Manage Client drawer "Recent activity"~~ — DONE
 - EP-10 Sprint Health UI (ST-062 per-sprint + ST-063 Overall) — DONE
+
+**UX actions (next UX session) — small Sprint Health copy update (Session 10 PM)**
+- In the mockup's EP-10 Sprint Health section, update any "no sprints" / "Add a `sprint-N` label in GitHub" copy to match the new file-driven model: "No sprints found. A sprint is added when the PM starts one in a Claude session." Same copy in the "GitHub unavailable" banner — replace with "Sprint Health data may be stale — most recent file ingestion failed" + Retry link. UI shape (dropdown, four blocks, trend table) is unchanged
 
 **UX actions (next UX session) — EP-09 Project Health Dashboard cockpit**
 - Redesign S-04 Overview tab as the EP-09 cockpit: KPI row with sprint scope dropdown (All-time / Last 3 default / Last 6 / Current / each past sprint), Sprint Progress + Milestone + QA stub + CR-by-origin two-tab section + Deviation section
@@ -377,7 +435,8 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 - **PRD revision still needed** — add Section for EP-09 Project Health Dashboard scope, CR origin classification, data ownership rule (ADR-008), and EP-10 Sprint Health scope. v1.1 has resolved Q1 + Q2 only
 
 **EP-10 grooming follow-up**
-- Sprint window date rule — pick one of: label creation timestamp, milestone due-date, first issue close in sprint. Lock at ST-061 grooming
+- ~~Sprint window date rule~~ — **resolved Session 10 PM**: dates come directly from the Sprints table in `sprint-health.md` (Claude records `start_date` when PM says "Start Sprint N", `end_date` when PM says "End Sprint N"). No GitHub-based derivation needed
+- File ingestion cadence — confirm 60s poll vs alternative at ST-061 grooming (Architect to decide)
 
 **Parked by PM (awaiting structure definition)**
 - QA Report entity — schema and entry path undefined. Either PM defines, or PM provides existing DB

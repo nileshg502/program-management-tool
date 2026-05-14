@@ -1,6 +1,6 @@
 # Session State
 
-**Last Updated:** 2026-05-12 (Session 10 — PM follow-up after UX)
+**Last Updated:** 2026-05-14 (Session 11 — PM, project onboarding)
 **Current Branch:** master
 **Total Delivered:** 0 points across 0 sprints
 
@@ -8,19 +8,57 @@
 
 ## Current State
 
+Session 11 (PM): **first external project onboarded to Sprint Health** — AI Code Factory. Created a new repo `nileshg502/ai-code-factory` (public) with `.trackwise/sprint-health.md` scaffolded using the same four-table structure (Sprints / Epics / Stories / Bugs) and chat-driven update protocol established in Session 10. Empty file — sprint data starts populating next week when AI Code Factory's Sprint 1 kicks off.
+
+This proves the per-project-repo pattern (Setup B) for projects external to the platform repo. Trackwise itself continues tracking its own sprint health centrally at `projects/trackwise/sprint-health.md` in this repo. Both files share the same shape so the future Trackwise ingestion job reads either layout.
+
+Backlog unchanged: **273 points / 63 stories / 10 epics.**
+
+---
+
+## Changes Made This Session (Session 11 — PM)
+
+**1. New project repo created — DONE**
+- Repo: `nileshg502/ai-code-factory` (public, branch `main`)
+- Created via `gh repo create` + initial commit `49c4d02`
+- Contents: single file `.trackwise/sprint-health.md` (empty four-table scaffold + protocol + field reference)
+- Local clone at `c:\ai-code-factory\`, tracking `origin/main`
+- No code yet — development starts next week; Sprint Health file ready to populate
+
+**2. Pattern validated — per-project-repo (Setup B)**
+- For projects external to `program-management-tool`, Sprint Health file lives at `.trackwise/sprint-health.md` in that project's own repo
+- For Trackwise itself, the file stays centralised under `projects/trackwise/sprint-health.md` (no separate repo — Trackwise tracks itself in the planning repo)
+- Both layouts use the same file format; future Trackwise ingestion will support both paths
+
+**3. Decision deferred — separate repo for Trackwise app**
+- PM raised the question of extracting Trackwise's own work into a dedicated `nileshg502/trackwise` repo (analogous to ai-code-factory), leaving `program-management-tool` as pure planning/docs
+- Decision deferred — PM will revisit later
+
+**4. Outstanding from Session 10 — still open**
+- Mockup empty-state copy update for EP-10 Sprint Health (UI shape unchanged, copy needs "GitHub label" → "Claude session" swap)
+- Architect items: Sprint Health DB schema, file ingestion mechanism, partial supersession of ADR-008/ADR-011
+
+---
+
+## Changes Made Previous Session (Session 10 — PM, after UX half)
+
+(Session 10 PM half: EP-10 data source flipped from GitHub-derived to chat-driven markdown file. Scaffold + epic + story rewrites. See entry below for details.)
+
+---
+
+## Earlier Session 10 entries follow
+
 Session 10 had two halves on the same day:
 
-**UX half (earlier):** mockup cleanup + EP-10 Sprint Health UI built (Overall trend table + per-sprint 2×2 block grid). UI shape — dropdown, Overall default, four blocks — remains correct and unaffected by the PM half below. Only empty-state copy needs a small update.
+**UX half:** mockup cleanup + EP-10 Sprint Health UI built (Overall trend table + per-sprint 2×2 block grid). UI shape — dropdown, Overall default, four blocks — remains correct and unaffected by the PM half. Only empty-state copy needs a small update.
 
-**PM half (this entry):** **EP-10 data source redesigned.** Sprint Health no longer derives from GitHub labels/milestones. New model: a per-project markdown file (`projects/<id>/sprint-health.md`) with four tables that mirror the future DB schema. Claude edits the file when the PM states sprint/story/bug events in chat sessions; Trackwise ingests the file into the DB; UI reads the DB. ADR-008 + ADR-011 are superseded for Sprint Health specifically (still hold for other GitHub-mirrored data — flagged for Architect).
+**PM half:** **EP-10 data source redesigned.** Sprint Health no longer derives from GitHub labels/milestones. New model: a per-project markdown file (`projects/<id>/sprint-health.md`) with four tables that mirror the future DB schema. Claude edits the file when the PM states sprint/story/bug events in chat sessions; Trackwise ingests the file into the DB; UI reads the DB. ADR-008 + ADR-011 are superseded for Sprint Health specifically (still hold for other GitHub-mirrored data — flagged for Architect).
 
 Scaffold file created: `projects/trackwise/sprint-health.md`. EP-10 epic and ST-061 rewritten. ST-062 / ST-063 lightly updated (empty-state copy, `multi_sprint_items` → `carryover_items`).
 
 Mockup: `design/mockups/trackwise-mockup.html` — UI shape unchanged from UX half; small copy update outstanding ("Add sprint-N label in GitHub" → "Start a sprint in a Claude session").
 
 EP-09 Project Health Dashboard cockpit redesign is still **deferred** — gated on PM resolving 5 parked design questions.
-
-Backlog unchanged: **273 points / 63 stories / 10 epics.**
 
 ---
 
@@ -389,6 +427,7 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 | 9 | PM | New epic EP-10 Sprint Health + 3 stories (ST-061 API, ST-062 per-sprint UI, ST-063 consolidated Overall UI). Count-based metrics only for v1.0; reuses ADR-011 cache; sits under EP-09's Sprint Progress tile. PM defaults documented as assumptions inside the epic — sprint window date rule deferred to grooming |
 | 10 | UX Designer | Drift audit then two-pass mockup update. **Pass 1 cleanup (−509 lines):** removed all sync UI, cr-tracker.md provenance, multi-file tracker, File Preview modal + 250 lines of JS, billable copy, points-velocity in 9 places, "issues" terminology, Forensic modal cr-tracker reference. Replaced velocity thresholds with PRD §12.2 burn-rate bands. Added carryover sub-line on Sprint Progress KPI. **Pass 2 EP-10 build (+370 lines):** new Sprint Health section under Project Detail → Overview, sticky sprint selector with `Overall` default + sprint-1..8 options, Overall consolidated trend table (ST-063), per-sprint 2×2 block grid (ST-062) covering Epics & Stories / Planned vs Completed / Bugs Logged vs Resolved / End-of-sprint Carryover, fully wired with `shSelectSprint()` JS and live data switching. EP-09 cockpit deferred — gated on PM resolving 5 parked design questions |
 | 10 | PM (follow-up) | **EP-10 data source flipped from GitHub-derived to chat-driven markdown file.** Created `projects/trackwise/sprint-health.md` scaffold with four tables (Sprints/Epics/Stories/Bugs) mirroring the DB. Rewrote EP-10 epic + ST-061. Lightly updated ST-062/063 (empty-state copy, `multi_sprint_items` → `carryover_items`). UX-built UI shape unchanged; only empty-state copy needs touch-up. ADR-008 + ADR-011 superseded for Sprint Health specifically — flagged for Architect. Saved chat-driven protocol to auto-memory |
+| 11 | PM | **First external project onboarded.** Created `nileshg502/ai-code-factory` repo (public, `main`) with `.trackwise/sprint-health.md` scaffold using the same four-table chat-driven structure. Validates the per-project-repo pattern (Setup B). Local clone at `c:\ai-code-factory\`. Development on AI Code Factory starts next week; file ready to populate. Trackwise-self continues tracking centrally in this repo. PM also raised — and deferred — the question of extracting Trackwise's own app work into a separate `nileshg502/trackwise` repo |
 
 ---
 
@@ -437,6 +476,11 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 **EP-10 grooming follow-up**
 - ~~Sprint window date rule~~ — **resolved Session 10 PM**: dates come directly from the Sprints table in `sprint-health.md` (Claude records `start_date` when PM says "Start Sprint N", `end_date` when PM says "End Sprint N"). No GitHub-based derivation needed
 - File ingestion cadence — confirm 60s poll vs alternative at ST-061 grooming (Architect to decide)
+- File path discovery for external project repos — the ingestion job (ST-061) now needs to read `.trackwise/sprint-health.md` from each tracked project's *own* repo (e.g. `nileshg502/ai-code-factory:.trackwise/sprint-health.md`), not just from a path inside `program-management-tool`. ST-061 needs a project → repo URL registry, and read access (token / install) to each tracked repo. Confirm at grooming
+
+**Project onboarding follow-ups (Session 11)**
+- AI Code Factory: Sprint 1 starts next week. When kicked off, in-session statement "working on ai-code-factory, start Sprint 1" triggers the first row in its `.trackwise/sprint-health.md`. Claude commits + pushes from the local clone at `c:\ai-code-factory\`
+- Separate repo for Trackwise app — PM-deferred decision. Today Trackwise is tracked in `program-management-tool/projects/trackwise/sprint-health.md`. If/when Trackwise's actual app code gets its own repo, the Sprint Health file should move with it
 
 **Parked by PM (awaiting structure definition)**
 - QA Report entity — schema and entry path undefined. Either PM defines, or PM provides existing DB

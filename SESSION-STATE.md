@@ -1,6 +1,6 @@
 # Session State
 
-**Last Updated:** 2026-05-14 (Session 11 — PM, project onboarding)
+**Last Updated:** 2026-05-18 (Session 12 — PM, reusable onboarding template)
 **Current Branch:** master
 **Total Delivered:** 0 points across 0 sprints
 
@@ -8,15 +8,40 @@
 
 ## Current State
 
-Session 11 (PM): **first external project onboarded to Sprint Health** — AI Code Factory. Created a new repo `nileshg502/ai-code-factory` (public) with `.trackwise/sprint-health.md` scaffolded using the same four-table structure (Sprints / Epics / Stories / Bugs) and chat-driven update protocol established in Session 10. Empty file — sprint data starts populating next week when AI Code Factory's Sprint 1 kicks off.
+Session 12 (PM): **reusable onboarding template created** at `projects/templates/trackwise-onboarding-prompt.md`. The template is a self-contained handoff prompt — paste it into a Claude session inside any external project's repo and that project's PM has everything needed to (a) create `trackwise/sprint-health.md` with the canonical four-table scaffold and (b) backfill the file from artifacts they already have access to (no question-asking on data they can discover from their own repos).
 
-This proves the per-project-repo pattern (Setup B) for projects external to the platform repo. Trackwise itself continues tracking its own sprint health centrally at `projects/trackwise/sprint-health.md` in this repo. Both files share the same shape so the future Trackwise ingestion job reads either layout.
+Triggered by a real onboarding case: PM needs to track a mid-sprint external project (Sprint 1 done, Sprint 2 ongoing). Rather than walk through that project one-off, the template captures the steps so every future onboarding follows the same recipe.
+
+**Folder convention lock (2026-05-18):** new projects use `trackwise/` (no leading dot). AI Code Factory (Session 11) was onboarded with `.trackwise/` before this lock — **known drift, deferred**. Either AI Code Factory's folder gets renamed later, or ST-061's ingestion accepts both paths. Flagged for follow-up.
 
 Backlog unchanged: **273 points / 63 stories / 10 epics.**
 
 ---
 
-## Changes Made This Session (Session 11 — PM)
+## Changes Made This Session (Session 12 — PM)
+
+**1. Reusable onboarding template — DONE**
+- File: `projects/templates/trackwise-onboarding-prompt.md`
+- Contents: self-contained handoff prompt the PM pastes into a Claude session inside an external project's repo. The receiving PM reads it once and can: create `trackwise/sprint-health.md` with the canonical scaffold (Step 1), backfill from their own repos (Step 2), and apply the chat-driven update protocol going forward (Step 3)
+- Embeds the full canonical scaffold inline (protocol header, four empty tables, field reference) so the template works without external links
+- Explicit "do NOT" rules baked in: no schema mods, no per-project columns, no fabricated data
+- Step 2 framing: receiving PM retrieves backfill data themselves from project artifacts they already have access to (sprint files, story files, git history, issue tracker). User does not have to re-state sprint dates / story status / bug counts that exist elsewhere
+- Reply protocol: receiving PM reports row counts + flags any genuine gaps after Step 1 + 2 are committed
+
+**2. Folder convention locked — `trackwise/` (no dot)**
+- All new external projects use `trackwise/sprint-health.md` at repo root
+- Decision recorded in template maintenance notes
+- **Known drift:** AI Code Factory (Session 11) was onboarded with `.trackwise/`. Two resolution paths: rename AI Code Factory's folder, or have ST-061 ingestion accept both `trackwise/` and `.trackwise/`. Deferred for future session
+- Rationale for choosing non-dot: PM preference; visibility in repo listings; not a system/tooling folder so doesn't need hidden convention
+
+**3. Maintenance rule documented**
+- Canonical scaffold lives at `projects/trackwise/sprint-health.md`
+- The template's embedded scaffold block must stay in lockstep with the canonical file
+- Schema version `1` in both; any column add/remove/rename bumps both and triggers an EP-10 migration story
+
+---
+
+## Changes Made Previous Session (Session 11 — PM)
 
 **1. New project repo created — DONE**
 - Repo: `nileshg502/ai-code-factory` (public, branch `main`)
@@ -428,6 +453,7 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 | 10 | UX Designer | Drift audit then two-pass mockup update. **Pass 1 cleanup (−509 lines):** removed all sync UI, cr-tracker.md provenance, multi-file tracker, File Preview modal + 250 lines of JS, billable copy, points-velocity in 9 places, "issues" terminology, Forensic modal cr-tracker reference. Replaced velocity thresholds with PRD §12.2 burn-rate bands. Added carryover sub-line on Sprint Progress KPI. **Pass 2 EP-10 build (+370 lines):** new Sprint Health section under Project Detail → Overview, sticky sprint selector with `Overall` default + sprint-1..8 options, Overall consolidated trend table (ST-063), per-sprint 2×2 block grid (ST-062) covering Epics & Stories / Planned vs Completed / Bugs Logged vs Resolved / End-of-sprint Carryover, fully wired with `shSelectSprint()` JS and live data switching. EP-09 cockpit deferred — gated on PM resolving 5 parked design questions |
 | 10 | PM (follow-up) | **EP-10 data source flipped from GitHub-derived to chat-driven markdown file.** Created `projects/trackwise/sprint-health.md` scaffold with four tables (Sprints/Epics/Stories/Bugs) mirroring the DB. Rewrote EP-10 epic + ST-061. Lightly updated ST-062/063 (empty-state copy, `multi_sprint_items` → `carryover_items`). UX-built UI shape unchanged; only empty-state copy needs touch-up. ADR-008 + ADR-011 superseded for Sprint Health specifically — flagged for Architect. Saved chat-driven protocol to auto-memory |
 | 11 | PM | **First external project onboarded.** Created `nileshg502/ai-code-factory` repo (public, `main`) with `.trackwise/sprint-health.md` scaffold using the same four-table chat-driven structure. Validates the per-project-repo pattern (Setup B). Local clone at `c:\ai-code-factory\`. Development on AI Code Factory starts next week; file ready to populate. Trackwise-self continues tracking centrally in this repo. PM also raised — and deferred — the question of extracting Trackwise's own app work into a separate `nileshg502/trackwise` repo |
+| 12 | PM | **Reusable onboarding template created** at `projects/templates/trackwise-onboarding-prompt.md`. Self-contained prompt the PM pastes into any external project's Claude session — receiving PM creates `trackwise/sprint-health.md` and backfills from their own repos (no question-asking on data they can discover themselves). Embeds the full canonical scaffold inline. **Folder convention locked: `trackwise/` (no dot).** AI Code Factory's `.trackwise/` flagged as known drift — resolve later by rename or by making ST-061 ingestion accept both paths |
 
 ---
 
@@ -481,6 +507,10 @@ EP-03 — Client & Project Dashboard (was 22, now 33):
 **Project onboarding follow-ups (Session 11)**
 - AI Code Factory: Sprint 1 starts next week. When kicked off, in-session statement "working on ai-code-factory, start Sprint 1" triggers the first row in its `.trackwise/sprint-health.md`. Claude commits + pushes from the local clone at `c:\ai-code-factory\`
 - Separate repo for Trackwise app — PM-deferred decision. Today Trackwise is tracked in `program-management-tool/projects/trackwise/sprint-health.md`. If/when Trackwise's actual app code gets its own repo, the Sprint Health file should move with it
+
+**Project onboarding follow-ups (Session 12)**
+- **Folder convention drift** — AI Code Factory uses `.trackwise/`; the locked convention is now `trackwise/` (no dot). Resolve by either renaming AI Code Factory's folder OR by making ST-061 ingestion accept both paths. Either is fine; pick at next PM/Architect session
+- **Template upkeep rule** — the embedded scaffold inside `projects/templates/trackwise-onboarding-prompt.md` must stay in lockstep with the canonical `projects/trackwise/sprint-health.md`. If columns/protocol change, update both AND bump `Schema version` in both
 
 **Parked by PM (awaiting structure definition)**
 - QA Report entity — schema and entry path undefined. Either PM defines, or PM provides existing DB
